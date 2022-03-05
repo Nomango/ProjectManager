@@ -23,7 +23,11 @@ namespace ProjectManager.Pages
     {
         public Home()
         {
-            var dlg = new Login.Login();
+            var dlg = new Login.Login
+            {
+                Width = 480,
+                Height = 320
+            };
             dlg.ShowDialog();
 
             if (dlg.DialogResult ?? false)

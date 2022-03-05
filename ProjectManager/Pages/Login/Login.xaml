@@ -6,15 +6,21 @@
                   xmlns:mui="http://firstfloorsoftware.com/ModernUI"
                   xmlns:app="clr-namespace:ProjectManager.Pages.Login"
                   mc:Ignorable="d" 
-                  d:DesignHeight="300" d:DesignWidth="300"
+                  d:DesignWidth="480"
+                  d:DesignHeight="320"
                   Title="Login"
-                  Style="{StaticResource BlankWindow}">
+                  Style="{StaticResource BlankWindow}"
+                  MinWidth="480"
+                  MinHeight="320"
+                  ResizeMode="CanResize"
+                  IsTitleVisible="False"
+                  >
     <ScrollViewer>
         <StackPanel MinWidth="200">
 
 
-            <TextBlock Text="SAMPLE FORM" Style="{StaticResource Heading2}" Margin="0,0,0,8" />
-            <mui:BBCodeBlock BBCode="A sample form demonstrating various controls with support for validation and focus visualization." Margin="0,0,0,16"/>
+            <TextBlock Text="Login" Style="{StaticResource Heading2}" Margin="0,0,0,8" />
+            <mui:BBCodeBlock BBCode="Connect to a LAN server." Margin="0,0,0,16"/>
 
             <!-- actual form starts here -->
             <StackPanel x:Name="Form" Orientation="Vertical">
@@ -42,99 +48,27 @@
                 </StackPanel.Resources>
 
                 <StackPanel>
-                    <Label Content="First name" Target="{Binding ElementName=TextFirstName}"/>
-                    <TextBox x:Name="TextFirstName" Width="150" Text="{Binding FirstName, Mode=TwoWay, ValidatesOnDataErrors=True}" />
+                    <Label Content="Host IP" Target="{Binding ElementName=TextHostIP}"/>
+                    <TextBox x:Name="TextHostIP" Width="150" Text="{Binding HostIP, Mode=TwoWay, ValidatesOnDataErrors=True}" />
                 </StackPanel>
                 <StackPanel>
-                    <Label Content="Last name" Target="{Binding ElementName=TextLastName}"/>
-                    <TextBox x:Name="TextLastName" Width="150" Text="{Binding LastName, Mode=TwoWay, ValidatesOnDataErrors=True}"/>
+                    <Label Content="User name" Target="{Binding ElementName=TextUserName}"/>
+                    <TextBox x:Name="TextUserName" Width="150" Text="{Binding UserName, Mode=TwoWay, ValidatesOnDataErrors=True}"/>
                 </StackPanel>
                 <StackPanel>
-                    <Label Content="Gender" Target="{Binding ElementName=RadioGendeMale}"/>
-                    <RadioButton x:Name="RadioGendeMale">
-                        <TextBlock>Male</TextBlock>
-                    </RadioButton>
-                    <RadioButton Content="Female" Margin="8,0,0,0" />
-                </StackPanel>
-                <StackPanel>
-                    <Label Content="Birth date" Target="{Binding ElementName=DateBirth}" />
-                    <DatePicker x:Name="DateBirth" />
-                </StackPanel>
-                <StackPanel>
-                    <Label Content="Address" Target="{Binding ElementName=TextAddress}"/>
-                    <TextBox x:Name="TextAddress" Width="150" />
-                </StackPanel>
-                <StackPanel>
-                    <Label Content="City" Target="{Binding ElementName=TextCity}"/>
-                    <TextBox x:Name="TextCity" Width="150" />
-                </StackPanel>
-                <StackPanel>
-                    <Label Content="State" Target="{Binding ElementName=ComboState}"/>
-                    <ComboBox x:Name="ComboState" Width="150">
-                        <ComboBoxItem>Alabama</ComboBoxItem>
-                        <ComboBoxItem>Alaska</ComboBoxItem>
-                        <ComboBoxItem>Arizona</ComboBoxItem>
-                        <ComboBoxItem>Arkansas</ComboBoxItem>
-                        <ComboBoxItem>California</ComboBoxItem>
-                        <ComboBoxItem>Colorado</ComboBoxItem>
-                        <ComboBoxItem>Connecticut</ComboBoxItem>
-                        <ComboBoxItem>Delaware</ComboBoxItem>
-                        <ComboBoxItem>Florida</ComboBoxItem>
-                        <ComboBoxItem>Georgia</ComboBoxItem>
-                        <ComboBoxItem>Hawaii</ComboBoxItem>
-                        <ComboBoxItem>Idaho</ComboBoxItem>
-                        <ComboBoxItem>Illinois</ComboBoxItem>
-                        <ComboBoxItem>Indiana</ComboBoxItem>
-                        <ComboBoxItem>Iowa</ComboBoxItem>
-                        <ComboBoxItem>Kansas</ComboBoxItem>
-                        <ComboBoxItem>Kentucky</ComboBoxItem>
-                        <ComboBoxItem>Louisiana</ComboBoxItem>
-                        <ComboBoxItem>Maine</ComboBoxItem>
-                        <ComboBoxItem>Maryland</ComboBoxItem>
-                        <ComboBoxItem>Massachusetts</ComboBoxItem>
-                        <ComboBoxItem>Michigan</ComboBoxItem>
-                        <ComboBoxItem>Minnesota</ComboBoxItem>
-                        <ComboBoxItem>Mississippi</ComboBoxItem>
-                        <ComboBoxItem>Missouri</ComboBoxItem>
-                        <ComboBoxItem>Montana</ComboBoxItem>
-                        <ComboBoxItem>Nebraska</ComboBoxItem>
-                        <ComboBoxItem>Nevada</ComboBoxItem>
-                        <ComboBoxItem>New Hampshire</ComboBoxItem>
-                        <ComboBoxItem>New Jersey</ComboBoxItem>
-                        <ComboBoxItem>New Mexico</ComboBoxItem>
-                        <ComboBoxItem>New York</ComboBoxItem>
-                        <ComboBoxItem>North Carolina</ComboBoxItem>
-                        <ComboBoxItem>North Dakota</ComboBoxItem>
-                        <ComboBoxItem>Ohio</ComboBoxItem>
-                        <ComboBoxItem>Oklahoma</ComboBoxItem>
-                        <ComboBoxItem>Oregon</ComboBoxItem>
-                        <ComboBoxItem>Pennsylvania</ComboBoxItem>
-                        <ComboBoxItem>Rhode Island</ComboBoxItem>
-                        <ComboBoxItem>South Carolina</ComboBoxItem>
-                        <ComboBoxItem>South Dakota</ComboBoxItem>
-                        <ComboBoxItem>Tennessee</ComboBoxItem>
-                        <ComboBoxItem>Texas</ComboBoxItem>
-                        <ComboBoxItem>Utah</ComboBoxItem>
-                        <ComboBoxItem>Vermont</ComboBoxItem>
-                        <ComboBoxItem>Virginia</ComboBoxItem>
-                        <ComboBoxItem>Washington</ComboBoxItem>
-                        <ComboBoxItem>West Virginia</ComboBoxItem>
-                        <ComboBoxItem>Wisconsin</ComboBoxItem>
-                        <ComboBoxItem>Wyoming</ComboBoxItem>
-                    </ComboBox>
-                </StackPanel>
-                <StackPanel>
-                    <Label Content="Zip code" Target="{Binding ElementName=TextZipCode}"/>
-                    <TextBox x:Name="TextZipCode" Width="150" />
+                    <Label Content="Password" Target="{Binding ElementName=TextPassword}"/>
+                    <PasswordBox x:Name="TextPassword" Width="150" />
                 </StackPanel>
                 <StackPanel >
                     <Label />
                     <CheckBox>
-                        <TextBlock FontWeight="Bold">I agree to the terms of use</TextBlock>
+                        <TextBlock FontWeight="Regular">Remeber host and user name</TextBlock>
                     </CheckBox>
                 </StackPanel>
-
-                <Button Content="Submit" Margin="100,16,0,0" HorizontalAlignment="Left" />
+                <StackPanel>
+                    <Button Content="Submit" x:Name="Submit" Click="Submit_Click" Margin="100,16,0,0" HorizontalAlignment="Left" />
+                    <mui:ModernProgressRing x:Name="ProgressRing" IsActive="False" MinWidth="24" MinHeight="24" Width="24" Height="24" Margin="5,5,0,0" Padding="0,0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Style="{StaticResource CircleProgressRingStyle}" />
+                </StackPanel>
             </StackPanel>
         </StackPanel>
     </ScrollViewer>

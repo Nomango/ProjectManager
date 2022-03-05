@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,9 +12,8 @@ namespace ProjectManager.Pages.Login
     public class LoginForm
         : NotifyPropertyChanged, IDataErrorInfo
     {
-        private string hostIP;
-        private string userName;
-        private string password;
+        private string hostIP = "192.168.1.1";
+        private string userName = "user";
 
         public string HostIP
         {
@@ -41,22 +41,20 @@ namespace ProjectManager.Pages.Login
             }
         }
 
-        public string Password
-        {
-            get { return this.password; }
-            set
-            {
-                if (this.password != value)
-                {
-                    this.password = value;
-                    OnPropertyChanged("Password");
-                }
-            }
-        }
-
         public string Error
         {
-            get { return null; }
+            get {
+                var columns = new string[]{ "HostIP", "UserName" };
+                foreach (var c in columns)
+                {
+                    var e = this[c];
+                    if (e != null)
+                    {
+                        return e;
+                    }
+                }
+                return null;
+            }
         }
 
         public string this[string columnName]
@@ -65,15 +63,23 @@ namespace ProjectManager.Pages.Login
             {
                 if (columnName == "HostIP")
                 {
-                    return string.IsNullOrEmpty(this.HostIP) ? "Required value" : null;
+                    if (string.IsNullOrEmpty(this.HostIP))
+                    {
+                        return "Required value";
+                    }
+                    if (!this.HostIP.Contains("."))
+                    {
+                        return "Invalid";
+                    }
+                    if (!IPAddress.TryParse(this.HostIP, out _))
+                    {
+                        return "Invalid";
+                    }
+                    return  null;
                 }
                 if (columnName == "UserName")
                 {
                     return string.IsNullOrEmpty(this.UserName) ? "Required value" : null;
-                }
-                if (columnName == "Password")
-                {
-                    return string.IsNullOrEmpty(this.Password) ? "Required value" : null;
                 }
                 return null;
             }

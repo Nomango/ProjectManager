@@ -13,7 +13,7 @@ namespace ProjectManager.Pages.Login
         : NotifyPropertyChanged, IDataErrorInfo
     {
         private string hostIP = "192.168.18.128";
-        private string userName = "nomango";
+        private string userName = "";
 
         public string HostIP
         {
@@ -43,18 +43,7 @@ namespace ProjectManager.Pages.Login
 
         public string Error
         {
-            get {
-                var columns = new string[]{ "HostIP", "UserName" };
-                foreach (var c in columns)
-                {
-                    var e = this[c];
-                    if (e != null)
-                    {
-                        return e;
-                    }
-                }
-                return null;
-            }
+            get;
         }
 
         public string this[string columnName]
@@ -75,7 +64,7 @@ namespace ProjectManager.Pages.Login
                     {
                         return "Invalid";
                     }
-                    return  null;
+                    return null;
                 }
                 if (columnName == "UserName")
                 {

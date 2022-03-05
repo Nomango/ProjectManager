@@ -1,4 +1,5 @@
-﻿using FirstFloor.ModernUI.Windows.Controls;
+﻿using FirstFloor.ModernUI.Presentation;
+using FirstFloor.ModernUI.Windows.Controls;
 using ProjectManager.FileManager;
 using System;
 using System.Collections.Generic;
@@ -20,40 +21,17 @@ namespace ProjectManager.Pages
     /// <summary>
     /// Interaction logic for Home.xaml
     /// </summary>
-    public partial class Home : UserControl
+    public partial class ServerList : UserControl
     {
-        public Home()
+        public ModernWindow Next;
+        public ServerList()
         {
-            var dlg = new Login.Login
-            {
-                Width = 480,
-                Height = 320
-            };
-            dlg.ShowDialog();
-
-            if (dlg.DialogResult ?? false)
-            {
-                InitializeComponent();
-                Setup();
-            }
-            else
-            {
-                Application.Current.Shutdown();
-            }
+            InitializeComponent();
         }
 
-        public void Setup()
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            FileWatcher.Init();
-            var dir = FileWatcher.GetDirectory();
-            foreach (var subDir in dir.GetDirectories())
-            {
-                this.DirTree.Items.Add(new TreeViewItem { Header = subDir.FullName });
-            }
-            foreach (var file in dir.GetFiles())
-            {
-                this.DirTree.Items.Add(new TreeViewItem { Header = file.FullName });
-            }
+            this.Parent.Dispatcher.BeginInvoke(null);
         }
     }
 }

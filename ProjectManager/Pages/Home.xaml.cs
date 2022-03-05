@@ -2,6 +2,7 @@
 using ProjectManager.FileManager;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,35 +25,31 @@ namespace ProjectManager.Pages
     {
         public Home()
         {
-            var dlg = new Login.Login
-            {
-                Width = 480,
-                Height = 320
-            };
-            dlg.ShowDialog();
+            InitializeComponent();
 
-            if (dlg.DialogResult ?? false)
-            {
-                InitializeComponent();
-                Setup();
-            }
-            else
-            {
-                Application.Current.Shutdown();
-            }
+            Setup();
         }
 
-        public void Setup()
+        public async void Setup()
         {
-            FileWatcher.Init();
-            var dir = FileWatcher.GetDirectory();
+            var dir = await Task.Run(() => {
+                FileWatcher.Init();
+                return FileWatcher.GetDirectory();
+            });
+            GenerateTree(dir, this.DirTree);
+        }
+
+        public void GenerateTree(DirectoryInfo dir, ItemsControl items)
+        {
             foreach (var subDir in dir.GetDirectories())
             {
-                this.DirTree.Items.Add(new TreeViewItem { Header = subDir.FullName });
+                var item = new TreeViewItem { Header = subDir.Name };
+                GenerateTree(subDir, item);
+                items.Items.Add(item);
             }
             foreach (var file in dir.GetFiles())
             {
-                this.DirTree.Items.Add(new TreeViewItem { Header = file.FullName });
+                items.Items.Add(new TreeViewItem { Header = file.Name });
             }
         }
     }

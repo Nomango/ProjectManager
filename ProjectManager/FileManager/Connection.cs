@@ -16,29 +16,31 @@ namespace ProjectManager.FileManager
         public static string UserName;
         public static SecureString Password;
 
-        public static void Connect(string hostIP, string userName, SecureString password)
+        public static int Connect(string hostIP, string userName, SecureString password)
         {
-            var myResource = new Util.NETRESOURCE();
-            myResource.dwScope = 0;
-            myResource.dwType = 0; //RESOURCETYPE_ANY
+            var myResource = new Net.NETRESOURCE();
+            myResource.dwScope = (int)Net.RESOURCE_SCOPE.RESOURCE_GLOBALNET;
+            myResource.dwType = (int)Net.RESOURCE_TYPE.RESOURCETYPE_DISK; //RESOURCETYPE_ANY
             myResource.dwDisplayType = 0;
             myResource.LocalName = "";
             myResource.RemoteName = @"\\" + hostIP;
             myResource.dwUsage = 0;
             myResource.Comment = "";
             myResource.Provider = "";
-            int result = Util.WNetAddConnection2(myResource,
-                                                 Util.GetSecureStringContent(Password),
-                                                 userName,
-                                                 0);
+            var rawPassword = Util.GetSecureStringContent(password);
+            int result = Net.WNetAddConnection2(myResource, rawPassword, userName, 0);
             if (result != 0)
             {
-                throw new Exception(string.Format("({0}){1}", result, Util.GetErrorMessage(result)));
+                return result;
             }
             HostIP = hostIP;
             UserName = userName;
-            Password = password.Copy();
-            Password.MakeReadOnly();
+            if (password != null)
+            {
+                Password = password.Copy();
+                Password.MakeReadOnly();
+            }
+            return 0;
         }
 
         public static void Disconnect()
@@ -47,7 +49,7 @@ namespace ProjectManager.FileManager
             {
                 return;
             }
-            int result = Util.WNetCancelConnection2(@"\\" + HostIP, 0, false);
+            int result = Net.WNetCancelConnection2(@"\\" + HostIP, 0, false);
             if (result != 0)
             {
                 throw new Exception(string.Format("({0}){1}", result, Util.GetErrorMessage(result)));

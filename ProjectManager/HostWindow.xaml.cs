@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,39 +17,30 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ProjectManager.Pages.Login
+namespace ProjectManager
 {
     /// <summary>
-    /// Interaction logic for Login.xaml
+    /// Interaction logic for ServerList.xaml
     /// </summary>
-    public partial class Login : ModernWindow
+    public partial class HostWindow : ModernWindow
     {
-        public string HostIP;
+        public bool AlreadyLogin;
         public string LastLoginUser;
 
-        public Login()
+        public HostWindow()
         {
             InitializeComponent();
-
             this.Loaded += OnLoaded;
-            if (LastLoginUser != null)
-            {
-                this.UseLastLogin.IsEnabled = true;
-                this.UseLastLogin.IsChecked = true;
-                this.TextUserName.Text = LastLoginUser;
-            }
         }
 
         void OnLoaded(object sender, RoutedEventArgs e)
         {
             // select first control on the form
-            Keyboard.Focus(this.TextUserName);
+            Keyboard.Focus(this.TextHostIP);
         }
 
-        private async void Submit_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            this.ErrorMessage.BBCode = "";
-
             var form = (IDataErrorInfo)this.Form.DataContext;
             if (form.Error != null)
             {
@@ -60,12 +50,24 @@ namespace ProjectManager.Pages.Login
             this.Progress.Visibility = Visibility.Visible;
             this.Submit.IsEnabled = false;
 
-            string hostIP = this.HostIP;
-            string userName = this.TextUserName.Text;
-            var password = this.TextPassword.SecurePassword;
+            // 尝试连接一下ip
+            string hostIP = this.TextHostIP.Text;
             var result = await Task.Run(() =>
             {
-                return Connection.Connect(hostIP, userName, password);
+                // 不知道为什么这段代码获取不到已连接的用户名
+                StringBuilder buffer = new StringBuilder(260);
+                int length = 260;
+                int result2 = Net.WNetGetUser(@"\\" + hostIP, buffer, length);
+                if (result2 == 0)
+                {
+                    this.LastLoginUser = buffer.ToString();
+                }
+                else
+                {
+                    var msg = string.Format("({0}){1}", result2, Util.GetErrorMessage(result2));
+                    Console.WriteLine(msg);
+                }
+                return Connection.Connect(hostIP, this.LastLoginUser, null);
             });
 
             this.Submit.IsEnabled = true;
@@ -73,6 +75,12 @@ namespace ProjectManager.Pages.Login
             this.Progress.IsIndeterminate = false;
 
             if (result == 0)
+            {
+                this.AlreadyLogin = true;
+                this.DialogResult = true;
+                this.Close();
+            }
+            else if (result == 1326 /* username or password is incorrect */)
             {
                 this.DialogResult = true;
                 this.Close();

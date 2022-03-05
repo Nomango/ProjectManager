@@ -12,8 +12,8 @@ namespace ProjectManager.Pages.Login
     public class LoginForm
         : NotifyPropertyChanged, IDataErrorInfo
     {
-        private string hostIP = "192.168.1.1";
-        private string userName = "user";
+        private string hostIP = "192.168.18.128";
+        private string userName = "nomango";
 
         public string HostIP
         {

@@ -3,7 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mui="http://firstfloorsoftware.com/ModernUI"
         Title="Project Manager" IsTitleVisible="True"
-        ContentSource="/Pages/Home.xaml">
+        ContentSource="/Pages/Home.xaml"
+        ResizeMode="CanResize"
+        >
+
+    <!--<mui:ModernWindow.TitleLinks>
+        <mui:Link DisplayName="settings" Source="/Pages/SettingsPage.xaml" />
+        --><!--<mui:Link DisplayName="help" Source="https://github.com/firstfloorsoftware/mui" />--><!--
+    </mui:ModernWindow.TitleLinks>-->
 
     <mui:ModernWindow.MenuLinkGroups>
         <mui:LinkGroup DisplayName="welcome">
@@ -11,15 +18,12 @@
                 <mui:Link DisplayName="home" Source="/Pages/Home.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
-        <mui:LinkGroup DisplayName="settings" GroupKey="settings">
-            <mui:LinkGroup.Links>
+        <!--<mui:LinkGroup DisplayName="settings" GroupKey="settings">-->
+        <mui:LinkGroup DisplayName="settings">
+                <mui:LinkGroup.Links>
                 <mui:Link DisplayName="software" Source="/Pages/SettingsPage.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
     </mui:ModernWindow.MenuLinkGroups>
-    
-    <mui:ModernWindow.TitleLinks>
-        <mui:Link DisplayName="settings" Source="/Pages/SettingsPage.xaml" />
-        <!--<mui:Link DisplayName="help" Source="https://github.com/firstfloorsoftware/mui" />-->
-    </mui:ModernWindow.TitleLinks>
+
 </mui:ModernWindow>

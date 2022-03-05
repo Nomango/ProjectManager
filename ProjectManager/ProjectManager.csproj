@@ -57,15 +57,41 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Pages\ServerList.xaml.cs">
+      <DependentUpon>ServerList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ServerList\ServerList.xaml.cs">
+      <DependentUpon>ServerList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ServerList\ServerListDialog.xaml.cs">
+      <DependentUpon>ServerListDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\Cmd.cs" />
+    <Compile Include="Utils\Shares.cs" />
+    <Compile Include="Utils\Utils.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="FileManager\Connection.cs" />
+    <Compile Include="FileManager\FileWatcher.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Pages\ServerList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Pages\Login\Login.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ServerList\ServerList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ServerList\ServerListDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

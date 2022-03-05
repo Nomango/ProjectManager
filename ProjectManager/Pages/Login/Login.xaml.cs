@@ -1,4 +1,5 @@
 ﻿using FirstFloor.ModernUI.Windows.Controls;
+using ProjectManager.FileManager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,21 +36,49 @@ namespace ProjectManager.Pages.Login
             Keyboard.Focus(this.TextHostIP);
         }
 
-        private void Submit_Click(object sender, RoutedEventArgs e)
+        private async void Submit_Click(object sender, RoutedEventArgs e)
         {
+            this.ErrorMessage.BBCode = "";
+
             var form = (LoginForm)this.Form.DataContext;
             if (form.Error != null)
             {
                 return;
             }
-            this.ProgressRing.IsActive = true;
+            this.Progress.IsIndeterminate = true;
+            this.Progress.Visibility = Visibility.Visible;
             this.Submit.IsEnabled = false;
-            Console.WriteLine(this.TextHostIP.Text);
-            Console.WriteLine(this.TextUserName.Text);
-            Console.WriteLine(this.TextPassword.Password);
 
-            this.DialogResult = true;
-            this.Close();
+            string hostIP = this.TextHostIP.Text;
+            string userName = this.TextUserName.Text;
+            var password = this.TextPassword.SecurePassword;
+            var msg = await Task.Run(() =>
+            {
+                try
+                {
+                    Connection.Connect(hostIP, userName, password);
+                }
+                catch (Exception ex)
+                {
+                    return ex.Message;
+                }
+                return null;
+            });
+
+            this.Submit.IsEnabled = true;
+            this.Progress.Visibility = Visibility.Hidden;
+            this.Progress.IsIndeterminate = false;
+
+            if (msg == null)
+            {
+                this.DialogResult = true;
+                this.Close();
+            }
+            else
+            {
+                msg = string.Join("", msg.Split('\r', '\n'));
+                this.ErrorMessage.BBCode = string.Format("[color=#ff4500]{0}[/color]", msg);
+            }
         }
     }
 }

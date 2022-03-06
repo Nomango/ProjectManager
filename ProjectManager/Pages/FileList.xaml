@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="ProjectManager.Pages.FileList"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+             xmlns:controls="clr-namespace:ProjectManager.Controls"
+             xmlns:events="clr-namespace:ProjectManager.Events"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <StackPanel MinWidth="200">
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="BackwardBtn" Content="&lt;" Click="ButtonBackward_Click" Margin="2" />
+                <Button x:Name="ForwardBtn" IsEnabled="False" Content="&gt;" Click="ButtonForward_Click" Margin="2" />
+            </StackPanel>
+            <ProgressBar x:Name="Progress" Visibility="Hidden" Minimum="0" Maximum="1" Height="16" Margin="0,0,0,5" />
+            <ScrollViewer>
+                <WrapPanel x:Name="FilePanel" Orientation="Horizontal" ItemHeight="120" ItemWidth="120" Margin="0,0,0,0" >
+                </WrapPanel>
+            </ScrollViewer>
+        </StackPanel>
+    </Grid>
+    <!--<Grid Style="{StaticResource ContentRoot}">
+        <DockPanel>
+            <DataGrid x:Name="fileList" Style="{StaticResource DefaultDataGrid}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsReadOnly="True" CanUserAddRows="False" AutoGenerateColumns="False" GridLinesVisibility="None"
+                      events:MouseDoubleClick.Command="{Binding OpenCurrentDirectory}"
+                      events:MouseDoubleClick.CommandParameter="{Binding SelectedItem,RelativeSource={RelativeSource Self}}"
+                      events:MouseLeftButtonUpClick.Command="{Binding SelectCurrentFileListItem}"
+                      ItemsSource="{Binding CurrentFileList}">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn  MinWidth="60">
+                        <DataGridTemplateColumn.Header>
+                            <CheckBox Content="全选" Margin="2" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding DataContext.IsStateCheckAll,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type DataGrid}}}"></CheckBox>
+                        </DataGridTemplateColumn.Header>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock Text="不可选" FontSize="12" Foreground="Black" Visibility="{Binding CurrentType,Converter={StaticResource TypeToCollapsedConverter}}" HorizontalAlignment="Left" VerticalAlignment="Center" ></TextBlock>
+                                    <CheckBox IsChecked="{Binding IsSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" IsThreeState="False" IsHitTestVisible="False" Visibility="{Binding CurrentType,Converter={StaticResource TypeToVisibleConverter}}"  HorizontalAlignment="Left" VerticalAlignment="Center" ToolTip="点击选中当前对象"></CheckBox>
+                                </Grid>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="名称" >
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                    <Image Source="{Binding Icon}" Margin="2"  HorizontalAlignment="Center" VerticalAlignment="Center"></Image>
+                                    <TextBlock Text="{Binding Name}" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="修改日期"   Binding="{Binding CreateTime}"/>
+                    <DataGridTextColumn Header="类型"   Binding="{Binding CurrentType}"/>
+                    <DataGridTextColumn Header="大小"  Binding="{Binding Size}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+    </Grid>-->
+</UserControl>

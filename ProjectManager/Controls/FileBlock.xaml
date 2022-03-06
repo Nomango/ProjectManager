@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="ProjectManager.Controls.FileBlock"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+             mc:Ignorable="d" 
+             d:DesignHeight="120" d:DesignWidth="120">
+    <Grid Style="{StaticResource ContentRoot}" Margin="0,0,0,0">
+        <StackPanel>
+            <!--<StackPanel.Resources>
+                <PathGeometry x:Key="FileIconData">M181.333333 213.333333A117.333333 117.333333 0 0 1 298.666667 96h340.778666a74.666667 74.666667 0 0 1 60.629334 31.146667l128.597333 179.072c9.088 12.714667 13.994667 27.946667 13.994667 43.52V810.666667A117.333333 117.333333 0 0 1 725.333333 928H298.666667A117.333333 117.333333 0 0 1 181.333333 810.666667V213.333333zM298.666667 160c-29.44 0-53.333333 23.893333-53.333334 53.333333v597.333334c0 29.44 23.893333 53.333333 53.333334 53.333333h426.666666c29.44 0 53.333333-23.893333 53.333334-53.333333V379.605333H640a32 32 0 0 1-32-32V160H298.666667z</PathGeometry>
+            </StackPanel.Resources>
+            <mui:ModernButton Content="" HorizontalAlignment="Center" Margin="0,15,0,0" IconData="{StaticResource FileIconData}" EllipseDiameter="64" EllipseStrokeThickness="0" IconWidth="42" IconHeight="42" />-->
+            <Image x:Name="Icon" Margin="22" Width="42" Height="42"></Image>
+            <TextBlock x:Name="TextName" Text="..." TextWrapping="Wrap" MaxHeight="30" MaxWidth="100" Margin="10,0,10,0" HorizontalAlignment="Center" />
+        </StackPanel>
+    </Grid>
+</UserControl>

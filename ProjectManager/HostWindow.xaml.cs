@@ -1,4 +1,5 @@
 ﻿using FirstFloor.ModernUI.Windows.Controls;
+using FirstFloor.ModernUI.Windows.Navigation;
 using ProjectManager.FileManager;
 using ProjectManager.Utils;
 using System;
@@ -37,6 +38,7 @@ namespace ProjectManager
         {
             // select first control on the form
             Keyboard.Focus(this.TextHostIP);
+            this.Progress.IsIndeterminate = false; // 不让进度条处于活动状态，否则动画看起来有点奇怪
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
@@ -50,6 +52,15 @@ namespace ProjectManager
             this.Progress.Visibility = Visibility.Visible;
             this.Submit.IsEnabled = false;
 
+            await TryConnect();
+
+            this.Submit.IsEnabled = true;
+            this.Progress.Visibility = Visibility.Hidden;
+            this.Progress.IsIndeterminate = false;
+        }
+
+        private async Task TryConnect()
+        {
             // 尝试连接一下ip
             string hostIP = this.TextHostIP.Text;
             var result = await Task.Run(() =>
@@ -70,20 +81,38 @@ namespace ProjectManager
                 return Connection.Connect(hostIP, this.LastLoginUser, null);
             });
 
-            this.Submit.IsEnabled = true;
-            this.Progress.Visibility = Visibility.Hidden;
-            this.Progress.IsIndeterminate = false;
-
+            // 连接成功，尝试获取资源列表
             if (result == 0)
             {
+                var errMsg = await Task.Run(() =>
+                {
+                    try
+                    {
+                        FileWatcher.Init();
+                    }
+                    catch (Exception ex)
+                    {
+                        return ex.Message;
+                    }
+                    return null;
+                });
+                if (errMsg != null)
+                {
+                    //Util.ShowErrorMessage(errMsg);
+                    this.ErrorMessage.BBCode = string.Format("[color=#ff4500]{0}[/color]", errMsg);
+                    return;
+                }
+                // 获取资源列表成功
                 this.AlreadyLogin = true;
                 this.DialogResult = true;
                 this.Close();
+                //LinkCommands.NavigateLink.Execute("/Pages/Login/Login.xaml", null);
             }
             else if (result == 1326 /* username or password is incorrect */)
             {
                 this.DialogResult = true;
                 this.Close();
+                //LinkCommands.NavigateLink.Execute("/Pages/Login/Login.xaml", null);
             }
             else
             {

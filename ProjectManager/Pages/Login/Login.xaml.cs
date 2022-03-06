@@ -60,6 +60,15 @@ namespace ProjectManager.Pages.Login
             this.Progress.Visibility = Visibility.Visible;
             this.Submit.IsEnabled = false;
 
+            await TryConnect();
+
+            this.Submit.IsEnabled = true;
+            this.Progress.Visibility = Visibility.Hidden;
+            this.Progress.IsIndeterminate = false;
+        }
+
+        private async Task TryConnect()
+        {
             string hostIP = this.HostIP;
             string userName = this.TextUserName.Text;
             var password = this.TextPassword.SecurePassword;
@@ -68,12 +77,28 @@ namespace ProjectManager.Pages.Login
                 return Connection.Connect(hostIP, userName, password);
             });
 
-            this.Submit.IsEnabled = true;
-            this.Progress.Visibility = Visibility.Hidden;
-            this.Progress.IsIndeterminate = false;
-
+            // 连接成功，尝试获取资源列表
             if (result == 0)
             {
+                var errMsg = await Task.Run(() =>
+                {
+                    try
+                    {
+                        FileWatcher.Init();
+                    }
+                    catch (Exception ex)
+                    {
+                        return ex.Message;
+                    }
+                    return null;
+                });
+                if (errMsg != null)
+                {
+                    //Util.ShowErrorMessage(errMsg);
+                    this.ErrorMessage.BBCode = string.Format("[color=#ff4500]{0}[/color]", errMsg);
+                    return;
+                }
+                // 获取资源列表成功
                 this.DialogResult = true;
                 this.Close();
             }

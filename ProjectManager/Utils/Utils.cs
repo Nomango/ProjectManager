@@ -1,10 +1,13 @@
-﻿using System;
+﻿using FirstFloor.ModernUI.Windows.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 
 namespace ProjectManager.Utils
 {
@@ -33,6 +36,49 @@ namespace ProjectManager.Utils
             StringBuilder lpBuffer = new StringBuilder(260);
             _ = FormatMessage(dwFlags, IntPtr.Zero, (uint)code, 0, lpBuffer, 260, IntPtr.Zero);
             return lpBuffer.ToString();
+        }
+
+        public static void ShowErrorMessage(string message)
+        {
+            //var dlg = new ModernDialog
+            //{
+            //    Width = 120,
+            //    Height = 75,
+            //    Title = "Error",
+            //    //Content = message,
+            //};
+            //dlg.Buttons = new Button[] { dlg.OkButton };
+            //dlg.ShowDialog();
+
+            ModernDialog.ShowMessage(message, "Error", System.Windows.MessageBoxButton.OK);
+        }
+
+        public static BitmapImage GetDefaultFolderIcon()
+        {
+            return GetIcon("folder.png");
+        }
+
+        public static BitmapImage GetDefaultSharedFolderIcon()
+        {
+            return GetIcon("share_folder.png");
+        }
+
+        public static BitmapImage GetIcon(string imageName)
+        {
+            try
+            {
+                string source = "/ProjectManager;component/Assets/Images/" + imageName;
+                BitmapImage bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.UriSource = new Uri(source, UriKind.RelativeOrAbsolute);
+                bitmap.EndInit();
+                return bitmap;
+            }
+            catch (Exception ex)
+            {
+                ;
+            }
+            return null;
         }
     }
 }

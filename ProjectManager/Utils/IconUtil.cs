@@ -7,6 +7,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Interop;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace ProjectManager.Utils
@@ -372,11 +374,11 @@ namespace ProjectManager.Utils
             try
             {
                 if (null == icon) return null;
-                Bitmap m_Bitmap = System.Drawing.Image.FromHbitmap(icon.ToBitmap().GetHbitmap());
+                Bitmap m_Bitmap = Image.FromHbitmap(icon.ToBitmap().GetHbitmap());
                 IntPtr ip = m_Bitmap.GetHbitmap();
-                BitmapSource bitmapSource = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
+                BitmapSource bitmapSource = Imaging.CreateBitmapSourceFromHBitmap(
                     ip, IntPtr.Zero, Int32Rect.Empty,
-                    System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+                    BitmapSizeOptions.FromEmptyOptions());
                 DeleteObject(ip);
                 return bitmapSource;
             }
@@ -384,6 +386,16 @@ namespace ProjectManager.Utils
             {
                 return null;
             }
+        }
+
+        public static ImageSource IconToImageSource(Icon icon)
+        {
+            ImageSource imageSource = Imaging.CreateBitmapSourceFromHIcon(
+                icon.Handle,
+                Int32Rect.Empty,
+                BitmapSizeOptions.FromEmptyOptions());
+
+            return imageSource;
         }
     }
 }

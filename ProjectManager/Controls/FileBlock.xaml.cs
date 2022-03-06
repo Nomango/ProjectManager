@@ -39,12 +39,12 @@ namespace ProjectManager.Controls
             if (extension.Equals(".exe"))
             {
                 var icon = IconUtil.GetFileIcon(FullPath, false);
-                this.Icon.Source = IconUtil.ConvertFromIcon(icon);
+                this.Icon.Source = IconUtil.IconToImageSource(icon);
             }
             else
             {
                 var icon = IconUtil.GetFileIcon(FileName, false);
-                this.Icon.Source = IconUtil.ConvertFromIcon(icon);
+                this.Icon.Source = IconUtil.IconToImageSource(icon);
             }
         }
     }

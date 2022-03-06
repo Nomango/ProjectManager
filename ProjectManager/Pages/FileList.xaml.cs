@@ -38,12 +38,12 @@ namespace ProjectManager.Pages
             foreach (string shareName in FileWatcher.ShareNames)
             {
                 var folder = new FolderBlock { FolderName = shareName, IsShared = true };
-                folder.MouseDoubleClick += ShareFolder_MouseDoubleClick;
+                folder.PreviewMouseDoubleClick += ShareFolder_PreviewMouseDoubleClick;
                 this.FilePanel.Children.Add(folder);
             }
         }
 
-        private async void ShareFolder_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private async void ShareFolder_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (sender is FolderBlock)
             {
@@ -62,7 +62,7 @@ namespace ProjectManager.Pages
             foreach (var subDir in dir.GetDirectories())
             {
                 var folderBlock = new FolderBlock { FolderName = subDir.Name };
-                folderBlock.MouseDoubleClick += async (s, e) =>
+                folderBlock.PreviewMouseDoubleClick += async (s, e) =>
                 {
                     var folder = s as FolderBlock;
                     var folderName = folder.FolderName;
@@ -77,7 +77,7 @@ namespace ProjectManager.Pages
             foreach (var file in dir.GetFiles())
             {
                 var fileBlock = new FileBlock { FileName = file.Name, FullPath = file.FullName };
-                //fileBlock.MouseDoubleClick += TODO;
+                //fileBlock.PreviewMouseDoubleClick += TODO;
                 items.Add(fileBlock);
             }
         }

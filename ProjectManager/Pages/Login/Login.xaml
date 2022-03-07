@@ -8,12 +8,12 @@
                   mc:Ignorable="d" 
                   d:DesignWidth="480"
                   d:DesignHeight="320"
-                  Title="Login"
+                  Title="Project Manager"
                   Style="{StaticResource BlankWindow}"
                   MinWidth="480"
                   MinHeight="320"
                   ResizeMode="CanResize"
-                  IsTitleVisible="False"
+                  IsTitleVisible="True"
                   >
     <ScrollViewer>
         <StackPanel MinWidth="200">
@@ -65,7 +65,7 @@
                     </CheckBox>
                 </StackPanel>
                 <StackPanel>
-                    <Button Content="Submit" x:Name="Submit" Click="Submit_Click" Margin="100,16,0,0" HorizontalAlignment="Left" />
+                    <Button Content="Submit" x:Name="Submit" Click="Submit_Click" Margin="100,16,0,0" HorizontalAlignment="Left" BorderBrush="#FF2770FF" IsDefault="True" />
                     <!--<mui:ModernProgressRing x:Name="ProgressRing" IsActive="False" MinWidth="24" MinHeight="24" Width="24" Height="24" Margin="5,5,0,0" Padding="0,0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Style="{StaticResource CircleProgressRingStyle}" />-->
                 </StackPanel>
                 <mui:BBCodeBlock x:Name="ErrorMessage" Margin="100,0,0,0" />

@@ -28,7 +28,7 @@ namespace ProjectManager
         {
             var dlg = new HostWindow
             {
-                Width = 300,
+                Width = 360,
                 Height = 200
             };
             dlg.ShowDialog();

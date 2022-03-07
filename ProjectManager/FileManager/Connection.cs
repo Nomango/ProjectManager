@@ -43,18 +43,21 @@ namespace ProjectManager.FileManager
             return 0;
         }
 
-        public static void Disconnect()
+        public static int Disconnect()
         {
             if (Connection.HostIP == null)
             {
-                return;
+                return 0;
             }
             int result = Net.WNetCancelConnection2(@"\\" + HostIP, 0, false);
             if (result != 0)
             {
-                throw new Exception(string.Format("({0}){1}", result, Util.GetErrorMessage(result)));
+                return result;
             }
             Connection.HostIP = "";
+            Connection.UserName = "";
+            Connection.Password = new SecureString();
+            return result;
         }
 
         public static void Connect2(string hostIP, string userName, string password)

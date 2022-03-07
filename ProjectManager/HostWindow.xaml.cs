@@ -49,13 +49,38 @@ namespace ProjectManager
                 return;
             }
             this.Progress.IsIndeterminate = true;
-            this.Progress.Visibility = Visibility.Visible;
+            //this.Progress.Visibility = Visibility.Visible;
             this.Submit.IsEnabled = false;
 
             await TryConnect();
 
             this.Submit.IsEnabled = true;
-            this.Progress.Visibility = Visibility.Hidden;
+            //this.Progress.Visibility = Visibility.Hidden;
+            this.Progress.IsIndeterminate = false;
+        }
+
+        private async void Reset_Click(object sender, RoutedEventArgs e)
+        {
+            var form = (IDataErrorInfo)this.Form.DataContext;
+            if (form.Error != null)
+            {
+                return;
+            }
+            this.Progress.IsIndeterminate = true;
+            //this.Progress.Visibility = Visibility.Visible;
+            this.Submit.IsEnabled = false;
+
+            var result = await Task.Run(() =>
+            {
+                return Connection.Disconnect();
+            });
+            if (result != 0)
+            {
+                ShowError(result);
+            }
+
+            this.Submit.IsEnabled = true;
+            //this.Progress.Visibility = Visibility.Hidden;
             this.Progress.IsIndeterminate = false;
         }
 
@@ -63,6 +88,17 @@ namespace ProjectManager
         {
             // 尝试连接一下ip
             string hostIP = this.TextHostIP.Text;
+            var canConnected = await Task.Run(() =>
+            {
+                return Net.TryConnect(hostIP);
+            });
+            if (!canConnected)
+            {
+                // 可能不是群晖主机
+                ShowError("尝试连接服务器失败，可能该IP并不是群晖主机地址");
+                return;
+            }
+
             var result = await Task.Run(() =>
             {
                 // 不知道为什么这段代码获取不到已连接的用户名
@@ -99,7 +135,7 @@ namespace ProjectManager
                 if (errMsg != null)
                 {
                     //Util.ShowErrorMessage(errMsg);
-                    this.ErrorMessage.BBCode = string.Format("[color=#ff4500]{0}[/color]", errMsg);
+                    ShowError(errMsg);
                     return;
                 }
                 // 获取资源列表成功
@@ -116,10 +152,20 @@ namespace ProjectManager
             }
             else
             {
-                var msg = string.Format("({0}){1}", result, Util.GetErrorMessage(result));
-                msg = string.Join("", msg.Split('\r', '\n'));
-                this.ErrorMessage.BBCode = string.Format("[color=#ff4500]{0}[/color]", msg);
+                ShowError(result);
             }
+        }
+
+        private void ShowError(int result)
+        {
+            var msg = string.Format("({0}){1}", result, Util.GetErrorMessage(result));
+            msg = string.Join("", msg.Split('\r', '\n'));
+            ShowError(msg);
+        }
+
+        private void ShowError(string msg)
+        {
+            this.ErrorMessage.BBCode = string.Format("[color=#ff4500]{0}[/color]", msg);
         }
     }
 }

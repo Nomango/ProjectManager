@@ -12,7 +12,7 @@ namespace ProjectManager.Pages.Login
     public class LoginForm
         : NotifyPropertyChanged, IDataErrorInfo
     {
-        private string hostIP = "192.168.18.128";
+        private string hostIP = "192.168.18.129";
         private string userName = "";
 
         public string HostIP

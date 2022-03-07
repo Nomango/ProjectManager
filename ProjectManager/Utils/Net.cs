@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -73,5 +75,23 @@ namespace ProjectManager.Utils
 
         [DllImport("mpr.dll")]
         public static extern int WNetGetUser(string server, [Out] StringBuilder userName, [In, Out] int length);
+
+        public static bool TryConnect(string server)
+        {
+            var client = new TcpClient();
+            try
+            {
+                return client.ConnectAsync(server, 5000 /* 群晖的Web端口 */).Wait(500);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("尝试连接服务器失败：" + ex.Message);
+                return false;
+            }
+            finally
+            {
+                client.Close();
+            }
+        }
     }
 }

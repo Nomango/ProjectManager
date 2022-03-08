@@ -36,6 +36,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -64,6 +65,7 @@
     <Compile Include="Controls\FileBlock.xaml.cs">
       <DependentUpon>FileBlock.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\FileTypeToContextMenuConverter.cs" />
     <Compile Include="Events\MouseDoubleClick.cs" />
     <Compile Include="Events\MouseLeftButtonUpClick.cs" />
     <Compile Include="Pages\FileList.xaml.cs">
@@ -149,6 +151,9 @@
     <Content Include="Assets\Images\flush.png" />
     <Resource Include="Assets\Images\folder.png" />
     <Resource Include="Assets\Images\share_folder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="behaviors\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

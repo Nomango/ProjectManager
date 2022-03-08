@@ -2,6 +2,8 @@
 using System.IO;
 using System.Collections;
 using System.Runtime.InteropServices;
+using System.Collections.ObjectModel;
+using System.Collections.Generic;
 
 namespace ProjectManager.Utils
 {
@@ -660,9 +662,10 @@ namespace ProjectManager.Utils
         /// </summary>
         /// <param name="server"></param>
         /// <returns></returns>
-        public static ShareCollection GetShares(string server)
+        public static ArrayList GetShares(string server)
         {
-            return new ShareCollection(server);
+            var shares = new ShareCollection(server);
+            return shares.InnerList;
         }
 
         #endregion

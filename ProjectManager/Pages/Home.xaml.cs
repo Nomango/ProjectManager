@@ -19,6 +19,11 @@ using System.Windows.Shapes;
 
 namespace ProjectManager.Pages
 {
+    public class ShareFolderItem
+    {
+        public string FolderName { get; set; }
+    }
+
     /// <summary>
     /// Interaction logic for Home.xaml
     /// </summary>
@@ -27,53 +32,7 @@ namespace ProjectManager.Pages
         public Home()
         {
             InitializeComponent();
-
-            //this.ShareList.SelectedSourceChanged += ShareList_SelectedSourceChanged;
-            //foreach (string shareName in FileWatcher.ShareNames)
-            //{
-            //    //var group = new LinkGroup
-            //    //{
-            //    //    DisplayName = shareName,
-            //    //};
-            //    //this.ShareList.LinkGroups.Add(group);
-
-            //    this.ShareList.Links.Add(new Link
-            //    {
-            //        DisplayName = shareName,
-            //        Source = new Uri(""),
-            //    });
-            //}
+            this.DataContext = FileWatcher.Instance;
         }
-
-        //private async void ShareList_SelectedSourceChanged(object sender, SourceEventArgs e)
-        //{
-        //    this.Progress.IsIndeterminate = true;
-        //    this.Progress.Visibility = Visibility.Visible;
-
-        //    // 选择了其他share name，重建文件树
-        //    this.DirTree.Items.Clear();
-        //    var dir = await Task.Run(() =>
-        //    {
-        //        return FileWatcher.GetRootDir();
-        //    });
-        //    GenerateTree(dir, this.DirTree);
-
-        //    this.Progress.Visibility = Visibility.Hidden;
-        //    this.Progress.IsIndeterminate = false;
-        //}
-
-        //public void GenerateTree(DirectoryInfo dir, ItemsControl items)
-        //{
-        //    foreach (var subDir in dir.GetDirectories())
-        //    {
-        //        var item = new TreeViewItem { Header = subDir.Name };
-        //        GenerateTree(subDir, item);
-        //        items.Items.Add(item);
-        //    }
-        //    foreach (var file in dir.GetFiles())
-        //    {
-        //        items.Items.Add(new TreeViewItem { Header = file.Name });
-        //    }
-        //}
     }
 }

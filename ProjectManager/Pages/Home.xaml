@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+             xmlns:mui="http://firstfloorsoftware.com/ModernUI" xmlns:pages="clr-namespace:ProjectManager.Pages"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <!--<ScrollViewer>
@@ -24,9 +24,30 @@
             </mui:ModernTab.Links>
         </mui:ModernTab>
     </Grid>-->
-    <mui:ModernTab SelectedSource="/Pages/FileList.xaml" Layout="List">
+    <!--<mui:ModernTab SelectedSource="/Pages/FileList.xaml" Layout="List">
         <mui:ModernTab.Links>
             <mui:Link DisplayName="My Files" Source="/Pages/FileList.xaml" />
         </mui:ModernTab.Links>
-    </mui:ModernTab>
+    </mui:ModernTab>-->
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="3"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <ListBox x:Name="ListShareFolder"
+                 ItemsSource="{Binding ShareNames}"
+                 SelectedItem="{Binding CurrentShareName}"
+                 Margin="{StaticResource SplitLeft}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <ListBoxItem Content="{Binding}" Padding="16,4,32,4" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <GridSplitter Grid.Column="1" />
+        <pages:FileList x:Name="FileList" Grid.Column="2" Margin="{StaticResource SplitRight}" />
+    </Grid>
 </UserControl>

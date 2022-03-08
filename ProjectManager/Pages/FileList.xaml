@@ -6,57 +6,43 @@
              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
              xmlns:controls="clr-namespace:ProjectManager.Controls"
              xmlns:events="clr-namespace:ProjectManager.Events"
+             xmlns:converters="clr-namespace:ProjectManager.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <converters:FileTypeToContextMenuConverter x:Key="FileTypeToContextMenuConverter" />
+    </UserControl.Resources>
     <Grid>
-        <StackPanel MinWidth="200">
-            <StackPanel Orientation="Horizontal">
-                <Button x:Name="BackwardBtn" Content="&lt;" Click="ButtonBackward_Click" Margin="2" />
-                <Button x:Name="ForwardBtn" IsEnabled="False" Content="&gt;" Click="ButtonForward_Click" Margin="2" />
+        <DockPanel LastChildFill="True">
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                <Button IsEnabled="{Binding CanBackward}" Content="&lt;" Click="ButtonBackward_Click" Margin="2" />
+                <Button IsEnabled="{Binding CanForward}" Content="&gt;" Click="ButtonForward_Click" Margin="2" />
             </StackPanel>
-            <ProgressBar x:Name="Progress" Visibility="Hidden" Minimum="0" Maximum="1" Height="16" Margin="0,0,0,5" />
-            <ScrollViewer>
-                <WrapPanel x:Name="FilePanel" Orientation="Horizontal" ItemHeight="120" ItemWidth="120" Margin="0,0,0,0" >
-                </WrapPanel>
-            </ScrollViewer>
-        </StackPanel>
-    </Grid>
-    <!--<Grid Style="{StaticResource ContentRoot}">
-        <DockPanel>
-            <DataGrid x:Name="fileList" Style="{StaticResource DefaultDataGrid}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsReadOnly="True" CanUserAddRows="False" AutoGenerateColumns="False" GridLinesVisibility="None"
-                      events:MouseDoubleClick.Command="{Binding OpenCurrentDirectory}"
-                      events:MouseDoubleClick.CommandParameter="{Binding SelectedItem,RelativeSource={RelativeSource Self}}"
-                      events:MouseLeftButtonUpClick.Command="{Binding SelectCurrentFileListItem}"
-                      ItemsSource="{Binding CurrentFileList}">
-                <DataGrid.Columns>
-                    <DataGridTemplateColumn  MinWidth="60">
-                        <DataGridTemplateColumn.Header>
-                            <CheckBox Content="全选" Margin="2" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding DataContext.IsStateCheckAll,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type DataGrid}}}"></CheckBox>
-                        </DataGridTemplateColumn.Header>
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <TextBlock Text="不可选" FontSize="12" Foreground="Black" Visibility="{Binding CurrentType,Converter={StaticResource TypeToCollapsedConverter}}" HorizontalAlignment="Left" VerticalAlignment="Center" ></TextBlock>
-                                    <CheckBox IsChecked="{Binding IsSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" IsThreeState="False" IsHitTestVisible="False" Visibility="{Binding CurrentType,Converter={StaticResource TypeToVisibleConverter}}"  HorizontalAlignment="Left" VerticalAlignment="Center" ToolTip="点击选中当前对象"></CheckBox>
-                                </Grid>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="名称" >
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                    <Image Source="{Binding Icon}" Margin="2"  HorizontalAlignment="Center" VerticalAlignment="Center"></Image>
-                                    <TextBlock Text="{Binding Name}" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+            <ProgressBar DockPanel.Dock="Top" x:Name="Progress" Visibility="Hidden" Minimum="0" Maximum="1" Height="16" Margin="0,0,0,5" />
+            <ScrollViewer x:Name="PanelBackground">
+                <ListBox x:Name="FilePanel"
+                         ItemsSource="{Binding CurrentFileItems}"
+                         SelectionMode="Extended"
+                         Margin="0,0,0,16">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel ItemHeight="120" ItemWidth="120" Margin="0,0,0,0" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <UserControl Width="120" Height="120"
+                                        ContextMenu="{Binding Converter={StaticResource FileTypeToContextMenuConverter}}"
+                                        PreviewMouseDoubleClick="FileItem_PreviewMouseDoubleClick">
+                                <StackPanel>
+                                    <Image Source="{Binding Icon}" Margin="22" Width="42" Height="42"></Image>
+                                    <TextBlock x:Name="TextName" Text="{Binding Name}" TextWrapping="Wrap" MaxHeight="30" MaxWidth="100" Margin="10,0,10,0" HorizontalAlignment="Center" />
                                 </StackPanel>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="修改日期"   Binding="{Binding CreateTime}"/>
-                    <DataGridTextColumn Header="类型"   Binding="{Binding CurrentType}"/>
-                    <DataGridTextColumn Header="大小"  Binding="{Binding Size}"/>
-                </DataGrid.Columns>
-            </DataGrid>
+                            </UserControl>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </ScrollViewer>
         </DockPanel>
-    </Grid>-->
+    </Grid>
 </UserControl>

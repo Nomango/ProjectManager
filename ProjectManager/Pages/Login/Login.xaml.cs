@@ -57,13 +57,13 @@ namespace ProjectManager.Pages.Login
                 return;
             }
             this.Progress.IsIndeterminate = true;
-            this.Progress.Visibility = Visibility.Visible;
+            //this.Progress.Visibility = Visibility.Visible;
             this.Submit.IsEnabled = false;
 
             await TryConnect();
 
             this.Submit.IsEnabled = true;
-            this.Progress.Visibility = Visibility.Hidden;
+            //this.Progress.Visibility = Visibility.Hidden;
             this.Progress.IsIndeterminate = false;
         }
 
@@ -84,7 +84,7 @@ namespace ProjectManager.Pages.Login
                 {
                     try
                     {
-                        FileWatcher.Init();
+                        FileWatcher.Instance.Init();
                     }
                     catch (Exception ex)
                     {
@@ -95,7 +95,7 @@ namespace ProjectManager.Pages.Login
                 if (errMsg != null)
                 {
                     //Util.ShowErrorMessage(errMsg);
-                    this.ErrorMessage.BBCode = string.Format("[color=#ff4500]{0}[/color]", errMsg);
+                    this.ErrorMessage.BBCode = Util.GetColoredBBCode(errMsg, "#ff4500");
                     return;
                 }
                 // 获取资源列表成功
@@ -104,9 +104,7 @@ namespace ProjectManager.Pages.Login
             }
             else
             {
-                var msg = string.Format("({0}){1}", result, Util.GetErrorMessage(result));
-                msg = string.Join("", msg.Split('\r', '\n'));
-                this.ErrorMessage.BBCode = string.Format("[color=#ff4500]{0}[/color]", msg);
+                this.ErrorMessage.BBCode = Util.GetColoredBBCode(Util.GetErrorMessage(result), "#ff4500");
             }
         }
     }

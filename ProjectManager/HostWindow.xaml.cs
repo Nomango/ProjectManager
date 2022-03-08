@@ -76,7 +76,7 @@ namespace ProjectManager
             });
             if (result != 0)
             {
-                ShowError(result);
+                this.ErrorMessage.BBCode = Util.GetColoredBBCode(Util.GetErrorMessage(result), "#ff4500");
             }
 
             this.Submit.IsEnabled = true;
@@ -95,7 +95,7 @@ namespace ProjectManager
             if (!canConnected)
             {
                 // 可能不是群晖主机
-                ShowError("尝试连接服务器失败，可能该IP并不是群晖主机地址");
+                this.ErrorMessage.BBCode = Util.GetColoredBBCode("尝试连接服务器失败，可能该IP并不是群晖主机地址", "#ff4500");
                 return;
             }
 
@@ -124,7 +124,7 @@ namespace ProjectManager
                 {
                     try
                     {
-                        FileWatcher.Init();
+                        FileWatcher.Instance.Init();
                     }
                     catch (Exception ex)
                     {
@@ -134,8 +134,7 @@ namespace ProjectManager
                 });
                 if (errMsg != null)
                 {
-                    //Util.ShowErrorMessage(errMsg);
-                    ShowError(errMsg);
+                    this.ErrorMessage.BBCode = Util.GetColoredBBCode(errMsg, "#ff4500");
                     return;
                 }
                 // 获取资源列表成功
@@ -152,20 +151,8 @@ namespace ProjectManager
             }
             else
             {
-                ShowError(result);
+                this.ErrorMessage.BBCode = Util.GetColoredBBCode(Util.GetErrorMessage(result), "#ff4500");
             }
-        }
-
-        private void ShowError(int result)
-        {
-            var msg = string.Format("({0}){1}", result, Util.GetErrorMessage(result));
-            msg = string.Join("", msg.Split('\r', '\n'));
-            ShowError(msg);
-        }
-
-        private void ShowError(string msg)
-        {
-            this.ErrorMessage.BBCode = string.Format("[color=#ff4500]{0}[/color]", msg);
         }
     }
 }

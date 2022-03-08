@@ -35,7 +35,15 @@ namespace ProjectManager.Utils
             uint dwFlags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
             StringBuilder lpBuffer = new StringBuilder(260);
             _ = FormatMessage(dwFlags, IntPtr.Zero, (uint)code, 0, lpBuffer, 260, IntPtr.Zero);
-            return lpBuffer.ToString();
+
+            var msg = string.Format("({0}){1}", code, lpBuffer.ToString());
+            msg = string.Join("", msg.Split('\r', '\n'));
+            return msg;
+        }
+
+        public static string GetColoredBBCode(string s, string color)
+        {
+            return string.Format("[color={0}]{1}[/color]", color, s.Replace("[", "【").Replace("]", "】"));
         }
 
         public static void ShowErrorMessage(string message)

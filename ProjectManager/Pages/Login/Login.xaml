@@ -19,7 +19,7 @@
         <StackPanel MinWidth="200">
             <TextBlock Text="Login" Style="{StaticResource Heading2}" Margin="0,0,0,8" />
             <!--<mui:BBCodeBlock BBCode="Connect to a LAN server." Margin="0,0,0,5"/>-->
-            <ProgressBar x:Name="Progress" Visibility="Hidden" Minimum="0" Maximum="1" Height="16" Margin="0,0,0,5" IsIndeterminate="True" />
+            <ProgressBar x:Name="Progress" IsIndeterminate="False" Value="1" Minimum="0" Maximum="1" Height="3" Margin="0,4,0,16" />
 
             <!-- actual form starts here -->
             <StackPanel x:Name="Form" Orientation="Vertical">

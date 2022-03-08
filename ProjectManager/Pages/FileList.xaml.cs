@@ -1,7 +1,10 @@
-﻿using ProjectManager.Controls;
+﻿using FirstFloor.ModernUI.Windows.Controls;
+using ProjectManager.Controls;
 using ProjectManager.FileManager;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -27,100 +30,60 @@ namespace ProjectManager.Pages
         {
             InitializeComponent();
 
-            FlushShares();
+            this.DataContext = FileWatcher.Instance;
+
+            this.PanelBackground.ContextMenu = new ContextMenu { };
+            var parseMenu = new MenuItem { Header = "Parse" };
+            parseMenu.Click += async (s, e) =>
+            {
+                await CopyOrMove();
+            };
+            this.PanelBackground.ContextMenu.Items.Add(parseMenu);
         }
 
-        private void FlushShares()
+        public async Task CopyOrMove()
         {
-            this.BackwardBtn.IsEnabled = false;
-            this.ForwardBtn.IsEnabled = false;
-            this.FilePanel.Children.Clear();
-            foreach (string shareName in FileWatcher.ShareNames)
+            IDataObject dataObject = Clipboard.GetDataObject();
+            if (!dataObject.GetDataPresent(DataFormats.FileDrop))
             {
-                var folder = new FolderBlock { FolderName = shareName, IsShared = true };
-                folder.PreviewMouseDoubleClick += ShareFolder_PreviewMouseDoubleClick;
-                this.FilePanel.Children.Add(folder);
+                return;
             }
-        }
+            var fileDropList = (string[])dataObject.GetData(DataFormats.FileDrop);
 
-        private async void ShareFolder_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            if (sender is FolderBlock)
+            MemoryStream memoryStream = (MemoryStream)dataObject.GetData("Preferred DropEffect", true);
+            DragDropEffects dragDropEffects = (DragDropEffects)memoryStream.ReadByte();
+            if ((dragDropEffects & DragDropEffects.Move) == DragDropEffects.Move)
             {
-                var folder = sender as FolderBlock;
-                var shareName = folder.FolderName;
-                await this.Flush(() =>
+                await Task.Run(() =>
                 {
-                    FileWatcher.SelectShare(shareName);
+                    Console.WriteLine("Move " + string.Join(", ", fileDropList));
                 });
-                this.BackwardBtn.IsEnabled = true;
             }
-        }
-
-        public void ApplyDir(DirectoryInfo dir, UIElementCollection items)
-        {
-            foreach (var subDir in dir.GetDirectories())
+            else if ((dragDropEffects & DragDropEffects.Copy) == DragDropEffects.Copy)
             {
-                var folderBlock = new FolderBlock { FolderName = subDir.Name };
-                folderBlock.PreviewMouseDoubleClick += async (s, e) =>
+                await Task.Run(() =>
                 {
-                    var folder = s as FolderBlock;
-                    var folderName = folder.FolderName;
-                    await this.Flush(() =>
-                    {
-                        FileWatcher.Enter(folderName);
-                    });
-                    this.ForwardBtn.IsEnabled = false;
-                };
-                items.Add(folderBlock);
-            }
-            foreach (var file in dir.GetFiles())
-            {
-                var fileBlock = new FileBlock { FileName = file.Name, FullPath = file.FullName };
-                //fileBlock.PreviewMouseDoubleClick += TODO;
-                items.Add(fileBlock);
+                    Console.WriteLine("Copy " + string.Join(", ", fileDropList));
+                });
             }
         }
 
-        public async Task Flush(Action action)
+        private void ButtonBackward_Click(object sender, RoutedEventArgs e)
         {
-            this.Progress.IsIndeterminate = true;
-            this.Progress.Visibility = Visibility.Visible;
-
-            // 选择了其他share name，重建文件树
-            this.FilePanel.Children.Clear();
-
-            var dir = await Task.Run(() =>
-            {
-                action?.Invoke();
-                return FileWatcher.GetCurrentDir();
-            });
-            ApplyDir(dir, this.FilePanel.Children);
-
-            this.Progress.Visibility = Visibility.Hidden;
-            this.Progress.IsIndeterminate = false;
+            FileWatcher.Instance.Backward();
         }
 
-        private async void ButtonBackward_Click(object sender, RoutedEventArgs e)
+        private void ButtonForward_Click(object sender, RoutedEventArgs e)
         {
-            if (FileWatcher.Backward())
-            {
-                await this.Flush(null);
-                this.ForwardBtn.IsEnabled = true;
-            }
-            else
-            {
-                FlushShares();
-            }
+            FileWatcher.Instance.Forward();
         }
 
-        private async void ButtonForward_Click(object sender, RoutedEventArgs e)
+        private void FileItem_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (!FileWatcher.Forward())
+            if (sender is FileItem)
             {
-                this.ForwardBtn.IsEnabled = false;
+                FileWatcher.Instance.Open(sender as FileItem);
             }
-            await this.Flush(null);
         }
     }
 }

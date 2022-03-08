@@ -18,6 +18,7 @@
                 <Button IsEnabled="{Binding CanBack}" Content="&lt;" Click="ButtonBackward_Click" Margin="2" />
                 <Button IsEnabled="{Binding CanForward}" Content="&gt;" Click="ButtonForward_Click" Margin="2" />
                 <Button IsEnabled="{Binding CanUp}" Content="^" Click="ButtonUp_Click" Margin="2" />
+                <Button Content="⭕" Click="ButtonFlush_Click" Margin="2" />
                 <TextBox Text="{Binding CurrentPath}" Margin="2" />
             </DockPanel>
             <ProgressBar DockPanel.Dock="Top" x:Name="Progress" IsEnabled="False" IsIndeterminate="True"

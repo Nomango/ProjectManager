@@ -39,7 +39,7 @@
 
         <ListBox x:Name="ListShareFolder"
                  ItemsSource="{Binding ShareNames}"
-                 SelectedItem="{Binding CurrentShareName}"
+                 SelectedItem="{Binding CurrentShareName, Mode=TwoWay}"
                  Margin="{StaticResource SplitLeft}">
             <ListBox.ItemTemplate>
                 <DataTemplate>

@@ -49,6 +49,11 @@ namespace ProjectManager.Pages
             await Do(() => FileWatcher.Instance.Up());
         }
 
+        private async void ButtonFlush_Click(object sender, RoutedEventArgs e)
+        {
+            await Do(() => FileWatcher.Instance.Flush());
+        }
+
         private async void FileItem_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (sender is UserControl)

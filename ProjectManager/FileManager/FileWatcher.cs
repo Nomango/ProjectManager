@@ -87,6 +87,7 @@ namespace ProjectManager.FileManager
                 {
                     currentShareName = value;
                     OnPropertyChanged("CurrentShareName");
+                    Flush();
                 }
             }
         }
@@ -224,6 +225,7 @@ namespace ProjectManager.FileManager
         {
             var dir = GetDir(this.CurrentPath);
             this.CurrentFileItems = GetDirItems(dir);
+            NotifyPathChanged();
         }
 
         public void Open(FileItem item)
@@ -252,7 +254,6 @@ namespace ProjectManager.FileManager
             }
             visitIndex--;
             Flush();
-            NotifyPathChanged();
         }
 
         public void Forward()
@@ -269,7 +270,6 @@ namespace ProjectManager.FileManager
             }
             visitIndex++;
             Flush();
-            NotifyPathChanged();
         }
         public void Up()
         {
@@ -303,7 +303,6 @@ namespace ProjectManager.FileManager
             visitHistory.Add(path);
             visitIndex = visitHistory.Count - 1;
             Flush();
-            NotifyPathChanged();
         }
     }
 }

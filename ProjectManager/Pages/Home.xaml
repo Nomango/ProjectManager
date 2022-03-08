@@ -43,7 +43,7 @@
                  Margin="{StaticResource SplitLeft}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <ListBoxItem Content="{Binding}" Padding="16,4,32,4" />
+                    <TextBlock Text="{Binding}" Width="160" Padding="16,4,32,4" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

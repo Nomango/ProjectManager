@@ -102,22 +102,7 @@ namespace ProjectManager.Pages
             }
 
             this.FilePanel.IsEnabled = false;
-            var ex = await Task.Run(() =>
-            {
-                try
-                {
-                    action.Invoke();
-                }
-                catch (Exception e)
-                {
-                    return e;
-                }
-                return null;
-            });
-            if (ex != null)
-            {
-                Util.ShowErrorMessage(this.Dispatcher, ex.Message);
-            }
+            await Task.Run(action);
             this.FilePanel.IsEnabled = true;
         }
     }

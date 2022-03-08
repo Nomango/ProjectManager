@@ -21,7 +21,9 @@
                 <Button IsEnabled="{Binding CanUp}" Content="^" Click="ButtonUp_Click" Margin="2" />
                 <TextBox Text="{Binding CurrentPath}" Margin="2" />
             </DockPanel>
-            <ProgressBar DockPanel.Dock="Top" x:Name="Progress" IsEnabled="False" IsIndeterminate="True" Visibility="{Binding IsEnabled, Source={x:Reference FilePanel}, Converter={StaticResource BoolToVisibilityConverter}}" Minimum="0" Maximum="1" Height="3" Margin="0,0,0,5" />
+            <ProgressBar DockPanel.Dock="Top" x:Name="Progress" IsEnabled="False" IsIndeterminate="True"
+                         Visibility="{Binding IsEnabled, Source={x:Reference FilePanel}, Converter={StaticResource BoolToVisibilityConverter}}"
+                         Minimum="0" Maximum="1" Height="3" Margin="0,0,0,5" />
             <ScrollViewer x:Name="PanelBackground">
                 <ListBox x:Name="FilePanel"
                          ItemsSource="{Binding CurrentFileItems}"

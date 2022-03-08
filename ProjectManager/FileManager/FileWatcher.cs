@@ -158,7 +158,7 @@ namespace ProjectManager.FileManager
                 if (CurrentPath != value)
                 {
                     var path = value.Replace('/', PathSpliter);
-                    path = Root + Path.Combine(path.Split(PathSpliter).Where((s) => s != "").ToArray());
+                    path = Root + Path.Combine(path.Split(PathSpliter).Where(s => s != "").ToArray());
                     Visit(path);
                 }
             }
@@ -242,9 +242,15 @@ namespace ProjectManager.FileManager
         public void Back()
         {
             if (visitHistory.Count == 0)
-                throw new Exception("访问记录为空，无法后退");
+            {
+                Util.ShowErrorMessage("访问记录为空，无法后退");
+                return;
+            }
             if (visitIndex == 0)
-                throw new Exception("已达到最早访问位置，无法后退");
+            {
+                Util.ShowErrorMessage("已达到最早访问位置，无法后退");
+                return;
+            }
             visitIndex--;
             Flush();
             NotifyPathChanged();
@@ -253,9 +259,15 @@ namespace ProjectManager.FileManager
         public void Forward()
         {
             if (visitHistory.Count == 0)
-                throw new Exception("访问记录为空，无法前进");
+            {
+                Util.ShowErrorMessage("访问记录为空，无法前进");
+                return;
+            }
             if (visitIndex >= visitHistory.Count - 1)
-                throw new Exception("已达到最晚访问位置，无法前进");
+            {
+                Util.ShowErrorMessage("已达到最晚访问位置，无法前进");
+                return;
+            }
             visitIndex++;
             Flush();
             NotifyPathChanged();
@@ -265,7 +277,8 @@ namespace ProjectManager.FileManager
             var folders = this.CurrentPath.Split('\\');
             if (folders.Count() == 0)
             {
-                throw new Exception("已达到根目录，无法向上");
+                Util.ShowErrorMessage("已达到根目录，无法向上");
+                return;
             }
             var parentFolders = folders.Where((s, idx) => s != "" && idx != folders.Count() - 1).ToArray();
             Visit(Root + Path.Combine(string.Join(@"\", parentFolders)));
@@ -277,11 +290,12 @@ namespace ProjectManager.FileManager
             {
                 _ = GetDir(path);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 // 路径错误，需要将UI的值修正
                 NotifyPathChanged();
-                throw;
+                Util.ShowErrorMessage(ex.Message);
+                return;
             }
             if (visitHistory.Count > 0 && visitIndex != visitHistory.Count - 1)
             {

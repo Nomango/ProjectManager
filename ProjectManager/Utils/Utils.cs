@@ -5,14 +5,16 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
 namespace ProjectManager.Utils
 {
-    class Util
+    public static class Util
     {
         public static string GetSecureStringContent(SecureString s)
         {
@@ -45,6 +47,11 @@ namespace ProjectManager.Utils
         public static string GetColoredBBCode(string s, string color)
         {
             return string.Format("[color={0}]{1}[/color]", color, s.Replace("[", "【").Replace("]", "】"));
+        }
+
+        public static void ShowErrorMessage(string message)
+        {
+            ShowErrorMessage(Application.Current.Dispatcher, message);
         }
 
         public static void ShowErrorMessage(Dispatcher dispatcher, string message)

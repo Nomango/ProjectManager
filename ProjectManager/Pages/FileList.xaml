@@ -8,17 +8,20 @@
              xmlns:events="clr-namespace:ProjectManager.Events"
              xmlns:converters="clr-namespace:ProjectManager.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="400" d:DesignWidth="600">
     <UserControl.Resources>
         <converters:FileTypeToContextMenuConverter x:Key="FileTypeToContextMenuConverter" />
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" Reverse="True" />
     </UserControl.Resources>
     <Grid>
         <DockPanel LastChildFill="True">
-            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-                <Button IsEnabled="{Binding CanBackward}" Content="&lt;" Click="ButtonBackward_Click" Margin="2" />
+            <DockPanel DockPanel.Dock="Top" LastChildFill="True">
+                <Button IsEnabled="{Binding CanBack}" Content="&lt;" Click="ButtonBackward_Click" Margin="2" />
                 <Button IsEnabled="{Binding CanForward}" Content="&gt;" Click="ButtonForward_Click" Margin="2" />
-            </StackPanel>
-            <ProgressBar DockPanel.Dock="Top" x:Name="Progress" Visibility="Hidden" Minimum="0" Maximum="1" Height="16" Margin="0,0,0,5" />
+                <Button IsEnabled="{Binding CanUp}" Content="^" Click="ButtonUp_Click" Margin="2" />
+                <TextBox Text="{Binding CurrentPath}" Margin="2" />
+            </DockPanel>
+            <ProgressBar DockPanel.Dock="Top" x:Name="Progress" IsEnabled="False" IsIndeterminate="True" Visibility="{Binding IsEnabled, Source={x:Reference FilePanel}, Converter={StaticResource BoolToVisibilityConverter}}" Minimum="0" Maximum="1" Height="3" Margin="0,0,0,5" />
             <ScrollViewer x:Name="PanelBackground">
                 <ListBox x:Name="FilePanel"
                          ItemsSource="{Binding CurrentFileItems}"

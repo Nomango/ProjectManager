@@ -31,7 +31,7 @@ namespace ProjectManager.FileManager
                     }
                     else
                     {
-                        var extension = System.IO.Path.GetExtension(Name);
+                        var extension = Path.GetExtension(Name);
                         if (extension.Equals(".exe"))
                         {
                             icon = IconUtil.IconToImageSource(IconUtil.GetFileIcon(FullPath, false));
@@ -49,6 +49,9 @@ namespace ProjectManager.FileManager
 
     public class FileWatcher : NotifyPropertyChanged
     {
+        public static char PathSpliter = '\\';
+        public static string Root = @"\";
+
         private static FileWatcher instance = new FileWatcher();
         public static FileWatcher Instance
         {
@@ -116,62 +119,57 @@ namespace ProjectManager.FileManager
             }
         }
 
-        private List<string> filePaths = new List<string>();
-        private List<string> historyPaths = new List<string>();
-        private string actualCurrentPath
+        private List<string> visitHistory = new List<string>();
+        private int visitIndex = 0;
+        public bool CanBack
         {
             get
             {
-                return @"\" + string.Join(@"\", filePaths.ToArray());
-            }
-        }
-        public bool CanBackward
-        {
-            get
-            {
-                return filePaths.Count > 0;
+                return visitHistory.Count > 0 && visitIndex > 0;
             }
         }
         public bool CanForward
         {
             get
             {
-                return historyPaths.Count > 0;
+                return visitHistory.Count > 0 && (visitIndex + 1) < visitHistory.Count;
+            }
+        }
+        public bool CanUp
+        {
+            get
+            {
+                return visitHistory.Count > 0 && visitHistory[visitIndex] != Root;
             }
         }
 
-        private string currentPath;
         public string CurrentPath
         {
             get
             {
-                return currentPath;
+                if (visitHistory.Count > 0)
+                {
+                    return visitHistory[visitIndex];
+                }
+                return Root;
             }
             set
             {
-                if (currentPath != value)
+                if (CurrentPath != value)
                 {
-                    var path = value.Replace("/", @"\");
-                    ApplyPath(path, true);
-
-                    currentPath = path;
-                    OnPropertyChanged("CurrentPath");
-                    OnPropertyChanged("CanBackward");
-                    OnPropertyChanged("CanForward");
+                    var path = value.Replace('/', PathSpliter);
+                    path = Root + Path.Combine(path.Split(PathSpliter).Where((s) => s != "").ToArray());
+                    Visit(path);
                 }
             }
         }
 
-        private void ApplyPath(string path, bool clearHistory)
+        public void NotifyPathChanged()
         {
-            var dir = GetDir(path);
-            this.CurrentFileItems = GetDirItems(dir);
-
-            filePaths = new List<string>(from s in path.Split('/') where s != "" select s);
-            if (clearHistory)
-            {
-                historyPaths.Clear();
-            }
+            OnPropertyChanged("CurrentPath");
+            OnPropertyChanged("CanBack");
+            OnPropertyChanged("CanForward");
+            OnPropertyChanged("CanUp");
         }
 
         public void Init()
@@ -192,7 +190,7 @@ namespace ProjectManager.FileManager
 
         public DirectoryInfo GetDir(string path)
         {
-            var dir = new DirectoryInfo(@"\\" + Connection.HostIP + @"\" + CurrentShareName + path);
+            var dir = new DirectoryInfo(@"\\" + Connection.HostIP + PathSpliter + CurrentShareName + path);
             if (!dir.Exists)
             {
                 throw new Exception("文件夹 " + path + " 不存在");
@@ -225,7 +223,7 @@ namespace ProjectManager.FileManager
 
         public void Flush()
         {
-            var dir = GetDir(this.actualCurrentPath);
+            var dir = GetDir(this.CurrentPath);
             this.CurrentFileItems = GetDirItems(dir);
         }
 
@@ -233,7 +231,7 @@ namespace ProjectManager.FileManager
         {
             if (item.IsFolder)
             {
-                this.CurrentPath = this.actualCurrentPath + @"\" + item.Name;
+                this.CurrentPath = this.CurrentPath + PathSpliter + item.Name;
             }
             else
             {
@@ -241,22 +239,58 @@ namespace ProjectManager.FileManager
             }
         }
 
-        public void Backward()
+        public void Back()
         {
-            if (filePaths.Count == 0)
-                return;
-            historyPaths.Add(filePaths[filePaths.Count - 1]);
-            filePaths.RemoveAt(filePaths.Count - 1);
-            this.CurrentPath = this.actualCurrentPath;
+            if (visitHistory.Count == 0)
+                throw new Exception("访问记录为空，无法后退");
+            if (visitIndex == 0)
+                throw new Exception("已达到最早访问位置，无法后退");
+            visitIndex--;
+            Flush();
+            NotifyPathChanged();
         }
 
         public void Forward()
         {
-            if (historyPaths.Count == 0)
-                return;
-            filePaths.Add(historyPaths[historyPaths.Count - 1]);
-            historyPaths.RemoveAt(historyPaths.Count - 1);
-            this.CurrentPath = this.actualCurrentPath;
+            if (visitHistory.Count == 0)
+                throw new Exception("访问记录为空，无法前进");
+            if (visitIndex >= visitHistory.Count - 1)
+                throw new Exception("已达到最晚访问位置，无法前进");
+            visitIndex++;
+            Flush();
+            NotifyPathChanged();
+        }
+        public void Up()
+        {
+            var folders = this.CurrentPath.Split('\\');
+            if (folders.Count() == 0)
+            {
+                throw new Exception("已达到根目录，无法向上");
+            }
+            var parentFolders = folders.Where((s, idx) => s != "" && idx != folders.Count() - 1).ToArray();
+            Visit(Root + Path.Combine(string.Join(@"\", parentFolders)));
+        }
+
+        private void Visit(string path)
+        {
+            try
+            {
+                _ = GetDir(path);
+            }
+            catch (Exception)
+            {
+                // 路径错误，需要将UI的值修正
+                NotifyPathChanged();
+                throw;
+            }
+            if (visitHistory.Count > 0 && visitIndex != visitHistory.Count - 1)
+            {
+                visitHistory.RemoveRange(visitIndex + 1, visitHistory.Count - visitIndex - 1);
+            }
+            visitHistory.Add(path);
+            visitIndex = visitHistory.Count - 1;
+            Flush();
+            NotifyPathChanged();
         }
     }
 }

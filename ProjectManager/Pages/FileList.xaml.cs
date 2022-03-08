@@ -1,6 +1,7 @@
 ﻿using FirstFloor.ModernUI.Windows.Controls;
 using ProjectManager.Controls;
 using ProjectManager.FileManager;
+using ProjectManager.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -68,22 +69,56 @@ namespace ProjectManager.Pages
             }
         }
 
-        private void ButtonBackward_Click(object sender, RoutedEventArgs e)
+        private async void ButtonBackward_Click(object sender, RoutedEventArgs e)
         {
-            FileWatcher.Instance.Backward();
+            await Do(() => FileWatcher.Instance.Back());
         }
 
-        private void ButtonForward_Click(object sender, RoutedEventArgs e)
+        private async void ButtonForward_Click(object sender, RoutedEventArgs e)
         {
-            FileWatcher.Instance.Forward();
+            await Do(() => FileWatcher.Instance.Forward());
         }
 
-        private void FileItem_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private async void ButtonUp_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is FileItem)
+            await Do(() => FileWatcher.Instance.Up());
+        }
+
+        private async void FileItem_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is UserControl)
             {
-                FileWatcher.Instance.Open(sender as FileItem);
+                var item = (FileItem)(sender as UserControl).DataContext;
+                await Do(() => FileWatcher.Instance.Open(item));
             }
+        }
+
+        private async Task Do(Action action)
+        {
+            if (!this.FilePanel.IsEnabled)
+            {
+                // 有其他任务在执行
+                return;
+            }
+
+            this.FilePanel.IsEnabled = false;
+            var ex = await Task.Run(() =>
+            {
+                try
+                {
+                    action.Invoke();
+                }
+                catch (Exception e)
+                {
+                    return e;
+                }
+                return null;
+            });
+            if (ex != null)
+            {
+                Util.ShowErrorMessage(this.Dispatcher, ex.Message);
+            }
+            this.FilePanel.IsEnabled = true;
         }
     }
 }

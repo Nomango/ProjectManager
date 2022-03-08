@@ -59,24 +59,5 @@ namespace ProjectManager.FileManager
             Connection.Password = new SecureString();
             return result;
         }
-
-        public static void Connect2(string hostIP, string userName, string password)
-        {
-            hostIP = @"\\" + hostIP;
-            string cmd = "net use " + hostIP + " " + password + " /user:" + userName;
-            Cmd.Exec(cmd);
-            Connection.HostIP = hostIP;
-        }
-
-        public static void Disconnect2()
-        {
-            if (Connection.HostIP == null)
-            {
-                return;
-            }
-            string cmd = "net use " + Connection.HostIP + " /delete";
-            Cmd.Exec(cmd);
-            Connection.HostIP = "";
-        }
     }
 }

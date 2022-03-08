@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 namespace ProjectManager.Utils
 {
@@ -46,19 +47,12 @@ namespace ProjectManager.Utils
             return string.Format("[color={0}]{1}[/color]", color, s.Replace("[", "【").Replace("]", "】"));
         }
 
-        public static void ShowErrorMessage(string message)
+        public static void ShowErrorMessage(Dispatcher dispatcher, string message)
         {
-            //var dlg = new ModernDialog
-            //{
-            //    Width = 120,
-            //    Height = 75,
-            //    Title = "Error",
-            //    //Content = message,
-            //};
-            //dlg.Buttons = new Button[] { dlg.OkButton };
-            //dlg.ShowDialog();
-
-            ModernDialog.ShowMessage(message, "Error", System.Windows.MessageBoxButton.OK);
+            dispatcher.BeginInvoke((Action)(() =>
+            {
+                ModernDialog.ShowMessage(message, "Error", System.Windows.MessageBoxButton.OK);
+            }));
         }
 
         public static BitmapImage GetDefaultFolderIcon()

@@ -10,11 +10,10 @@
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="600">
     <UserControl.Resources>
-        <converters:FileTypeToContextMenuConverter x:Key="FileTypeToContextMenuConverter" />
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" Reverse="True" />
     </UserControl.Resources>
     <Grid>
-        <DockPanel LastChildFill="True">
+        <DockPanel x:Name="WorkspacePanel" LastChildFill="True">
             <DockPanel DockPanel.Dock="Top" LastChildFill="True">
                 <Button IsEnabled="{Binding CanBack}" Content="&lt;" Click="ButtonBackward_Click" Margin="2" />
                 <Button IsEnabled="{Binding CanForward}" Content="&gt;" Click="ButtonForward_Click" Margin="2" />
@@ -24,21 +23,31 @@
             <ProgressBar DockPanel.Dock="Top" x:Name="Progress" IsEnabled="False" IsIndeterminate="True"
                          Visibility="{Binding IsEnabled, Source={x:Reference FilePanel}, Converter={StaticResource BoolToVisibilityConverter}}"
                          Minimum="0" Maximum="1" Height="3" Margin="0,0,0,5" />
-            <ScrollViewer x:Name="PanelBackground">
+            <ScrollViewer ContextMenuOpening="ContextMenu_ContextMenuOpening">
+                <ScrollViewer.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem x:Name="ParseMenuItem" Header="Parse" Click="Parse_Click"></MenuItem>
+                    </ContextMenu>
+                </ScrollViewer.ContextMenu>
                 <ListBox x:Name="FilePanel"
                          ItemsSource="{Binding CurrentFileItems}"
                          SelectionMode="Extended"
                          Margin="0,0,0,16">
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <WrapPanel ItemHeight="120" ItemWidth="120" Margin="0,0,0,0" />
+                            <WrapPanel ItemHeight="120" ItemWidth="120"
+                                       Width="{Binding ActualWidth, ElementName=WorkspacePanel}"
+                                       Margin="0,0,0,0" />
                         </ItemsPanelTemplate>
                     </ListBox.ItemsPanel>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <UserControl Width="120" Height="120"
-                                        ContextMenu="{Binding Converter={StaticResource FileTypeToContextMenuConverter}}"
-                                        PreviewMouseDoubleClick="FileItem_PreviewMouseDoubleClick">
+                                        PreviewMouseDoubleClick="FileItem_PreviewMouseDoubleClick"
+                                        ContextMenuOpening="FileItem_ContextMenuOpening">
+                                <UserControl.ContextMenu>
+                                    <ContextMenu></ContextMenu>
+                                </UserControl.ContextMenu>
                                 <StackPanel>
                                     <Image Source="{Binding Icon}" Margin="22" Width="42" Height="42"></Image>
                                     <TextBlock x:Name="TextName" Text="{Binding Name}" TextWrapping="Wrap" MaxHeight="30" MaxWidth="100" Margin="10,0,10,0" HorizontalAlignment="Center" />

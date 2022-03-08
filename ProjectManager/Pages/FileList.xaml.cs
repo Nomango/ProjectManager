@@ -32,41 +32,6 @@ namespace ProjectManager.Pages
             InitializeComponent();
 
             this.DataContext = FileWatcher.Instance;
-
-            this.PanelBackground.ContextMenu = new ContextMenu { };
-            var parseMenu = new MenuItem { Header = "Parse" };
-            parseMenu.Click += async (s, e) =>
-            {
-                await CopyOrMove();
-            };
-            this.PanelBackground.ContextMenu.Items.Add(parseMenu);
-        }
-
-        public async Task CopyOrMove()
-        {
-            IDataObject dataObject = Clipboard.GetDataObject();
-            if (!dataObject.GetDataPresent(DataFormats.FileDrop))
-            {
-                return;
-            }
-            var fileDropList = (string[])dataObject.GetData(DataFormats.FileDrop);
-
-            MemoryStream memoryStream = (MemoryStream)dataObject.GetData("Preferred DropEffect", true);
-            DragDropEffects dragDropEffects = (DragDropEffects)memoryStream.ReadByte();
-            if ((dragDropEffects & DragDropEffects.Move) == DragDropEffects.Move)
-            {
-                await Task.Run(() =>
-                {
-                    Console.WriteLine("Move " + string.Join(", ", fileDropList));
-                });
-            }
-            else if ((dragDropEffects & DragDropEffects.Copy) == DragDropEffects.Copy)
-            {
-                await Task.Run(() =>
-                {
-                    Console.WriteLine("Copy " + string.Join(", ", fileDropList));
-                });
-            }
         }
 
         private async void ButtonBackward_Click(object sender, RoutedEventArgs e)
@@ -90,6 +55,171 @@ namespace ProjectManager.Pages
             {
                 var item = (FileItem)(sender as UserControl).DataContext;
                 await Do(() => FileWatcher.Instance.Open(item));
+            }
+        }
+
+        private async void Parse_Click(object sender, RoutedEventArgs e)
+        {
+            IDataObject dataObject = Clipboard.GetDataObject();
+            if (!dataObject.GetDataPresent(DataFormats.FileDrop))
+            {
+                return;
+            }
+            var fileDropList = (string[])dataObject.GetData(DataFormats.FileDrop);
+
+            // 判断是复制还是剪切
+            MemoryStream memoryStream = (MemoryStream)dataObject.GetData("Preferred DropEffect", true);
+            DragDropEffects dragDropEffects = (DragDropEffects)memoryStream.ReadByte();
+            if ((dragDropEffects & DragDropEffects.Move) == DragDropEffects.Move)
+            {
+                await Task.Run(() =>
+                {
+                    Console.WriteLine("Move " + string.Join(", ", fileDropList));
+                    var result = FileUtil.Move(fileDropList, FileWatcher.Instance.CurrentFullPath);
+                    if (result != 0)
+                    {
+                        Util.ShowErrorMessage(Util.GetErrorMessage(result));
+                        return;
+                    }
+                    FileWatcher.Instance.Flush();
+                });
+            }
+            else if ((dragDropEffects & DragDropEffects.Copy) == DragDropEffects.Copy)
+            {
+                await Task.Run(() =>
+                {
+                    Console.WriteLine("Copy " + string.Join(", ", fileDropList));
+                    var result = FileUtil.Copy(fileDropList, FileWatcher.Instance.CurrentFullPath);
+                    if (result != 0)
+                    {
+                        Util.ShowErrorMessage(Util.GetErrorMessage(result));
+                        return;
+                    }
+                    FileWatcher.Instance.Flush();
+                });
+            }
+        }
+
+        private void ContextMenu_ContextMenuOpening(object sender, ContextMenuEventArgs e)
+        {
+            if (sender is Control)
+            {
+                var elem = sender as Control;
+                var menu = elem.ContextMenu;
+                foreach (MenuItem item in menu.Items)
+                {
+                    if (item.Header == this.ParseMenuItem.Header)
+                    {
+                        // 判断是否可以粘贴
+                        IDataObject dataObject = Clipboard.GetDataObject();
+                        item.IsEnabled = dataObject.GetDataPresent(DataFormats.FileDrop);
+                    }
+                }
+            }
+        }
+
+        private void FileItem_ContextMenuOpening(object sender, ContextMenuEventArgs e)
+        {
+            if (sender is UserControl)
+            {
+                var elem = sender as UserControl;
+                if (this.FilePanel.SelectedItems.Count == 0)
+                    return;
+
+                var menu = new ContextMenu { };
+
+                if (this.FilePanel.SelectedItems.Count == 1)
+                {
+                    var openMenu = new MenuItem { Header = "Open" };
+                    openMenu.Click += (s, ea) => FileWatcher.Instance.Open((FileItem)this.FilePanel.SelectedItem);
+                    menu.Items.Add(openMenu);
+                    menu.Items.Add(new Separator());
+                }
+
+                var cutMenu = new MenuItem { Header = "Cut" };
+                cutMenu.Click += (s, ea) => CutAllSelectedFileItems();
+                menu.Items.Add(cutMenu);
+
+                var copyMenu = new MenuItem { Header = "Copy" };
+                copyMenu.Click += (s, ea) => CopyAllSelectedFileItems();
+                menu.Items.Add(copyMenu);
+
+                menu.Items.Add(new Separator());
+
+                var deleteMenu = new MenuItem { Header = "Delete" };
+                deleteMenu.Click += (s, ea) => DeleteAllSelectedFileItems();
+                menu.Items.Add(deleteMenu);
+                elem.ContextMenu = menu;
+
+                if (this.FilePanel.SelectedItems.Count == 1)
+                {
+                    var renameMenu = new MenuItem { Header = "Rename" };
+                    renameMenu.Click += (s, ea) => RenameSelectedFileItem();
+                    menu.Items.Add(renameMenu);
+                }
+            }
+        }
+
+        private async void CopyAllSelectedFileItems()
+        {
+            if (this.FilePanel.SelectedItems.Count == 0)
+                return;
+            var fileItems = this.FilePanel.SelectedItems.Cast<FileItem>();
+            var filePaths = from item in fileItems select item.FullPath;
+            await Task.Run(() =>
+            {
+                FileUtil.SetDropFilesIntoClipboard(filePaths.ToArray(), false);
+            });
+        }
+
+        private async void CutAllSelectedFileItems()
+        {
+            if (this.FilePanel.SelectedItems.Count == 0)
+                return;
+            var fileItems = this.FilePanel.SelectedItems.Cast<FileItem>();
+            var filePaths = from item in fileItems select item.FullPath;
+            await Task.Run(() =>
+            {
+                FileUtil.SetDropFilesIntoClipboard(filePaths.ToArray(), true);
+            });
+        }
+
+        private async void DeleteAllSelectedFileItems()
+        {
+            if (this.FilePanel.SelectedItems.Count == 0)
+                return;
+            var fileItems = this.FilePanel.SelectedItems.Cast<FileItem>();
+            var filePaths = from item in fileItems select item.FullPath;
+            await Task.Run(() =>
+            {
+                Console.WriteLine("Delete " + string.Join(", ", filePaths));
+                var result = FileUtil.Delete(filePaths.ToArray());
+                if (result != 0)
+                {
+                    Util.ShowErrorMessage(Util.GetErrorMessage(result));
+                    return;
+                }
+                FileWatcher.Instance.Flush();
+            });
+        }
+
+        private void RenameSelectedFileItem()
+        {
+            if (this.FilePanel.SelectedItem == null)
+                return;
+
+            var dlg = new RenameFileDialog();
+            dlg.ShowDialog();
+            if (dlg.DialogResult ?? false)
+            {
+                var fileItem = (FileItem)this.FilePanel.SelectedItem;
+                var result = FileUtil.Rename(fileItem.FullPath, dlg.NewName.Text);
+                if (result != 0)
+                {
+                    Util.ShowErrorMessage(Util.GetErrorMessage(result));
+                    return;
+                }
+                FileWatcher.Instance.Flush();
             }
         }
 

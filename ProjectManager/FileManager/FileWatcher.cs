@@ -105,20 +105,6 @@ namespace ProjectManager.FileManager
             }
         }
 
-        private List<FileItem> selectedFileItems;
-        public List<FileItem> SelectedFileItems
-        {
-            get { return selectedFileItems; }
-            set
-            {
-                if (selectedFileItems != value)
-                {
-                    selectedFileItems = value;
-                    OnPropertyChanged("SelectedFileItems");
-                }
-            }
-        }
-
         private List<string> visitHistory = new List<string>();
         private int visitIndex = 0;
         public bool CanBack
@@ -164,6 +150,14 @@ namespace ProjectManager.FileManager
             }
         }
 
+        public string CurrentFullPath
+        {
+            get
+            {
+                return getFullPath(CurrentPath);
+            }
+        }
+
         public void NotifyPathChanged()
         {
             OnPropertyChanged("CurrentPath");
@@ -188,9 +182,14 @@ namespace ProjectManager.FileManager
             }
         }
 
+        private string getFullPath(string path)
+        {
+            return @"\\" + Connection.HostIP + PathSpliter + CurrentShareName + path;
+        }
+
         public DirectoryInfo GetDir(string path)
         {
-            var dir = new DirectoryInfo(@"\\" + Connection.HostIP + PathSpliter + CurrentShareName + path);
+            var dir = new DirectoryInfo(getFullPath(path));
             if (!dir.Exists)
             {
                 throw new Exception("文件夹 " + path + " 不存在");

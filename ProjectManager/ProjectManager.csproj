@@ -66,7 +66,7 @@
       <DependentUpon>FileBlock.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
-    <Compile Include="Converters\FileTypeToContextMenuConverter.cs" />
+    <Compile Include="Converters\CountToBoolConverter.cs" />
     <Compile Include="Events\MouseDoubleClick.cs" />
     <Compile Include="Events\MouseLeftButtonUpClick.cs" />
     <Compile Include="Pages\FileList.xaml.cs">
@@ -75,6 +75,10 @@
     <Compile Include="HostWindow.xaml.cs">
       <DependentUpon>HostWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\RenameFileDialog.xaml.cs">
+      <DependentUpon>RenameFileDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\FileUtil.cs" />
     <Compile Include="Utils\IconUtil.cs" />
     <Compile Include="Utils\Net.cs" />
     <Compile Include="Utils\Shares.cs" />
@@ -106,6 +110,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="HostWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\RenameFileDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

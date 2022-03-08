@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
-             xmlns:controls="clr-namespace:ProjectManager.Controls"
              xmlns:events="clr-namespace:ProjectManager.Events"
              xmlns:converters="clr-namespace:ProjectManager.Converters"
              mc:Ignorable="d" 
@@ -55,7 +54,8 @@
                         <DataTemplate>
                             <UserControl Width="120" Height="120"
                                         PreviewMouseDoubleClick="FileItem_PreviewMouseDoubleClick"
-                                        ContextMenuOpening="FileItem_ContextMenuOpening">
+                                        ContextMenuOpening="FileItem_ContextMenuOpening"
+                                        Background="Transparent">
                                 <UserControl.ContextMenu>
                                     <ContextMenu></ContextMenu>
                                 </UserControl.ContextMenu>

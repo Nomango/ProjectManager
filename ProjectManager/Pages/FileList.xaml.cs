@@ -1,5 +1,4 @@
 ﻿using FirstFloor.ModernUI.Windows.Controls;
-using ProjectManager.Controls;
 using ProjectManager.FileManager;
 using ProjectManager.Utils;
 using System;

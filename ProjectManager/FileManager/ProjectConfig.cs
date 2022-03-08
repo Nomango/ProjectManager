@@ -10,7 +10,7 @@ namespace ProjectManager.FileManager
 {
     public static class ProjectConfig
     {
-        public static string[] subDirs = { "素材", "落地页", "杂项" };
+        private static string[] subDirs = { "素材", "落地页", "杂项" };
         public static string[] SubDirs
         {
             get

@@ -53,7 +53,10 @@ namespace ProjectManager.Pages
         {
             if (sender is Button)
             {
-                (sender as Button).ContextMenu.IsOpen = true;
+                var menu = (sender as Button).ContextMenu;
+                menu.IsOpen = true;
+                // 鼠标左键点开菜单时，数据绑定有问题，手动同步一下
+                this.UploadMenu.IsEnabled = FileWatcher.Instance.IsInProject;
             }
         }
 
@@ -111,6 +114,13 @@ namespace ProjectManager.Pages
                     FileWatcher.Instance.Flush();
                 });
             }
+        }
+
+        private async void UploadMenu_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new UploadDialog(FileWatcher.Instance.CurrentProject);
+            dlg.ShowDialog();
+            await Do(() => FileWatcher.Instance.Flush());
         }
 
         private async void CreateProjectMenu_Click(object sender, RoutedEventArgs e)

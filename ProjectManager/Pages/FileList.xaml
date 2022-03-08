@@ -21,8 +21,9 @@
                 <Button Content="..." Margin="2" Click="ButtonMore_Click">
                     <Button.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Header="Create Project" Click="CreateProjectMenu_Click" />
                             <MenuItem Header="Refresh" Click="RefreshMenu_Click" />
+                            <MenuItem Header="Upload" x:Name="UploadMenu" IsEnabled="{Binding IsInProject}" Click="UploadMenu_Click" />
+                            <MenuItem Header="Create Project" Click="CreateProjectMenu_Click" />
                         </ContextMenu>
                     </Button.ContextMenu>
                 </Button>
@@ -36,6 +37,7 @@
                     <ContextMenu>
                         <MenuItem Header="Refresh" Click="RefreshMenu_Click"></MenuItem>
                         <MenuItem x:Name="ParseMenuItem" Header="Parse" Click="ParseMenu_Click"></MenuItem>
+                        <MenuItem x:Name="UploadMenuItem" IsEnabled="{Binding IsInProject}" Header="Upload" Click="UploadMenu_Click"></MenuItem>
                     </ContextMenu>
                 </ScrollViewer.ContextMenu>
                 <ListBox x:Name="FilePanel"

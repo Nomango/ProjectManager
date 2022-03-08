@@ -159,12 +159,30 @@ namespace ProjectManager.FileManager
             }
         }
 
+        public bool IsInProject
+        {
+            get
+            {
+                var depth = CurrentPath.Split(PathSpliter).Where(s => !string.IsNullOrEmpty(s)).Count();
+                return depth >= 1;
+            }
+        }
+
+        public string CurrentProject
+        {
+            get
+            {
+                return CurrentPath.Split(PathSpliter).Where(s => !string.IsNullOrEmpty(s)).FirstOrDefault();
+            }
+        }
+
         public void NotifyPathChanged()
         {
             OnPropertyChanged("CurrentPath");
             OnPropertyChanged("CanBack");
             OnPropertyChanged("CanForward");
             OnPropertyChanged("CanUp");
+            OnPropertyChanged("IsInProject");
         }
 
         public void Init()

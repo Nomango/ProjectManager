@@ -6,30 +6,6 @@
              xmlns:mui="http://firstfloorsoftware.com/ModernUI" xmlns:pages="clr-namespace:ProjectManager.Pages"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <!--<ScrollViewer>
-        <StackPanel MinWidth="200">
-            <ProgressBar x:Name="Progress" Visibility="Hidden" Minimum="0" Maximum="1" Height="16" Margin="0,0,0,5" />
-            <mui:ModernMenu x:Name="ShareList" Margin="0,0,0,16" SelectedSource="/link1">
-            </mui:ModernMenu>
-            <TreeView x:Name="DirTree" />
-        </StackPanel>
-    </ScrollViewer>-->
-    <!--<Grid Style="{StaticResource ContentRoot}">
-        <ProgressBar x:Name="Progress" Visibility="Hidden" Minimum="0" Maximum="1" Height="16" Margin="0,0,0,5" />
-        <mui:ModernTab x:Name="ShareList" Layout="Tab">
-            <mui:ModernTab.Links>
-                <mui:Link DisplayName="Basic" Source="/Content/LoremIpsum.xaml" />
-                <mui:Link DisplayName="Split" Source="/Content/LoremIpsumSplit.xaml" />
-                <mui:Link DisplayName="List" Source="/Content/LoremIpsumList.xaml" />
-            </mui:ModernTab.Links>
-        </mui:ModernTab>
-    </Grid>-->
-    <!--<mui:ModernTab SelectedSource="/Pages/FileList.xaml" Layout="List">
-        <mui:ModernTab.Links>
-            <mui:Link DisplayName="My Files" Source="/Pages/FileList.xaml" />
-        </mui:ModernTab.Links>
-    </mui:ModernTab>-->
-
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>

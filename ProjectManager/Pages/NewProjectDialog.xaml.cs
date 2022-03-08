@@ -1,8 +1,10 @@
 ﻿using FirstFloor.ModernUI.Presentation;
 using FirstFloor.ModernUI.Windows.Controls;
+using ProjectManager.FileManager;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,21 +20,21 @@ using System.Windows.Shapes;
 
 namespace ProjectManager.Pages
 {
-    public class NewNameModel : NotifyPropertyChanged, IDataErrorInfo
+    public class CreateProjectModel : NotifyPropertyChanged, IDataErrorInfo
     {
-        private string newName;
-        public string NewName
+        private string projectName;
+        public string ProjectName
         {
             get
             {
-                return newName;
+                return projectName;
             }
             set
             {
-                if (newName != value)
+                if (projectName != value)
                 {
-                    newName = value;
-                    OnPropertyChanged("NewName");
+                    projectName = value;
+                    OnPropertyChanged("ProjectName");
                 }
             }
         }
@@ -66,9 +68,16 @@ namespace ProjectManager.Pages
 
         public string GetError(string columnName)
         {
-            if (columnName == "NewName")
+            if (columnName == "ProjectName")
             {
-                return string.IsNullOrEmpty(NewName) ? "Required value" : null;
+                if (string.IsNullOrEmpty(ProjectName))
+                {
+                    return "Required value";
+                }
+                if (!ProjectConfig.CheckProjectName(ProjectName))
+                {
+                    return "Project exists";
+                }
             }
             return null;
         }
@@ -77,18 +86,29 @@ namespace ProjectManager.Pages
     /// <summary>
     /// Interaction logic for ModernDialog1.xaml
     /// </summary>
-    public partial class RenameFileDialog : ModernDialog
+    public partial class NewProjectDialog : ModernDialog
     {
-        public RenameFileDialog()
+        public NewProjectDialog()
         {
             InitializeComponent();
 
             // define the dialog buttons
             this.Buttons = new Button[] { this.OkButton, this.CancelButton };
-            this.Loaded += RenameFileDialog_Loaded;
+            this.OkButton.Command = null;
+            this.OkButton.Click += (s, e) =>
+            {
+                var form = (IDataErrorInfo)this.Form.DataContext;
+                if (!string.IsNullOrEmpty(form.Error))
+                {
+                    return;
+                }
+                this.DialogResult = true;
+                this.Close();
+            };
+            this.Loaded += OnLoaded;
         }
 
-        private void RenameFileDialog_Loaded(object sender, RoutedEventArgs e)
+        private void OnLoaded(object sender, RoutedEventArgs e)
         {
             Keyboard.Focus(this.TextNewName);
         }

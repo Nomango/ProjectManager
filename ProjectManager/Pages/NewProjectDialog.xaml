@@ -1,4 +1,4 @@
-﻿<mui:ModernDialog x:Class="ProjectManager.Pages.RenameFileDialog"
+﻿<mui:ModernDialog x:Class="ProjectManager.Pages.NewProjectDialog"
                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -7,11 +7,11 @@
                   xmlns:app="clr-namespace:ProjectManager.Pages"
                   mc:Ignorable="d" 
                   d:DesignHeight="300" d:DesignWidth="300"
-                  Title="Rename" ResizeMode="CanResize">
+                  Title="Create Project" ResizeMode="CanResize">
     <ScrollViewer>
-        <StackPanel Orientation="Vertical" MinWidth="400">
+        <StackPanel x:Name="Form" Orientation="Vertical" MinWidth="400">
             <StackPanel.DataContext>
-                <app:NewNameModel />
+                <app:CreateProjectModel />
             </StackPanel.DataContext>
             <StackPanel.Resources>
                 <Style TargetType="StackPanel">
@@ -31,13 +31,9 @@
             </StackPanel.Resources>
 
             <StackPanel>
-                <Label Content="New name" Target="{Binding ElementName=TextNewName}"/>
-                <TextBox x:Name="TextNewName" Text="{Binding NewName, Mode=TwoWay, ValidatesOnDataErrors=True}" MaxLength="100" Width="150"/>
+                <Label Content="Project name" Target="{Binding ElementName=TextNewName}"/>
+                <TextBox x:Name="TextNewName" Text="{Binding ProjectName, Mode=TwoWay, ValidatesOnDataErrors=True}" MaxLength="100" Width="150"/>
             </StackPanel>
-            <!--<StackPanel Orientation="Horizontal">
-                    <Button Content="Confirm" IsDefault="True" Margin="4" />
-                    <Button Content="Cancel" IsCancel="True" Margin="4"/>
-                </StackPanel>-->
         </StackPanel>
     </ScrollViewer>
 </mui:ModernDialog>

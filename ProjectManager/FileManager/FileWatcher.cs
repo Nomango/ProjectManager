@@ -142,7 +142,7 @@ namespace ProjectManager.FileManager
             }
             set
             {
-                if (CurrentPath != value)
+                if (CurrentPath != value && value != null)
                 {
                     var path = value.Replace('/', PathSpliter);
                     path = Root + Path.Combine(path.Split(PathSpliter).Where(s => s != "").ToArray());
@@ -155,7 +155,7 @@ namespace ProjectManager.FileManager
         {
             get
             {
-                return getFullPath(CurrentPath);
+                return GetFullPath(CurrentPath);
             }
         }
 
@@ -183,14 +183,14 @@ namespace ProjectManager.FileManager
             }
         }
 
-        private string getFullPath(string path)
+        public string GetFullPath(string path)
         {
             return @"\\" + Connection.HostIP + PathSpliter + CurrentShareName + path;
         }
 
         public DirectoryInfo GetDir(string path)
         {
-            var dir = new DirectoryInfo(getFullPath(path));
+            var dir = new DirectoryInfo(GetFullPath(path));
             if (!dir.Exists)
             {
                 throw new Exception("文件夹 " + path + " 不存在");

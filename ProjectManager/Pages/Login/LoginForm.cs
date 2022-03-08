@@ -12,6 +12,8 @@ namespace ProjectManager.Pages.Login
     public class LoginForm
         : NotifyPropertyChanged, IDataErrorInfo
     {
+        private Dictionary<string, string> errors = new Dictionary<string, string>();
+
         private string hostIP = "192.168.18.130";
         private string userName = "";
 
@@ -43,35 +45,53 @@ namespace ProjectManager.Pages.Login
 
         public string Error
         {
-            get;
+            get
+            {
+                return errors.Count > 0 ? "has error" : null;
+            }
         }
 
         public string this[string columnName]
         {
             get
             {
-                if (columnName == "HostIP")
+                var err = GetError(columnName);
+                if (err != null)
                 {
-                    if (string.IsNullOrEmpty(this.HostIP))
-                    {
-                        return "Required value";
-                    }
-                    if (!this.HostIP.Contains("."))
-                    {
-                        return "Invalid";
-                    }
-                    if (!IPAddress.TryParse(this.HostIP, out _))
-                    {
-                        return "Invalid";
-                    }
+                    errors.Add(columnName, err);
+                    return err;
+                }
+                else
+                {
+                    errors.Remove(columnName);
                     return null;
                 }
-                if (columnName == "UserName")
+            }
+        }
+
+        private string GetError(string columnName)
+        {
+            if (columnName == "HostIP")
+            {
+                if (string.IsNullOrEmpty(this.HostIP))
                 {
-                    return string.IsNullOrEmpty(this.UserName) ? "Required value" : null;
+                    return "Required value";
+                }
+                if (!this.HostIP.Contains("."))
+                {
+                    return "Invalid";
+                }
+                if (!IPAddress.TryParse(this.HostIP, out _))
+                {
+                    return "Invalid";
                 }
                 return null;
             }
+            if (columnName == "UserName")
+            {
+                return string.IsNullOrEmpty(this.UserName) ? "Required value" : null;
+            }
+            return null;
         }
     }
 }

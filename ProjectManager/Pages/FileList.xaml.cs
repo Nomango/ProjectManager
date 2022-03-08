@@ -49,9 +49,12 @@ namespace ProjectManager.Pages
             await Do(() => FileWatcher.Instance.Up());
         }
 
-        private async void ButtonFlush_Click(object sender, RoutedEventArgs e)
+        private void ButtonMore_Click(object sender, RoutedEventArgs e)
         {
-            await Do(() => FileWatcher.Instance.Flush());
+            if (sender is Button)
+            {
+                (sender as Button).ContextMenu.IsOpen = true;
+            }
         }
 
         private async void FileItem_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -106,6 +109,24 @@ namespace ProjectManager.Pages
                         return;
                     }
                     FileWatcher.Instance.Flush();
+                });
+            }
+        }
+
+        private async void CreateProjectMenu_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new NewProjectDialog();
+            dlg.ShowDialog();
+            if (dlg.DialogResult ?? false)
+            {
+                var projectName = dlg.TextNewName.Text;
+                if (string.IsNullOrEmpty(projectName))
+                    return;
+
+                await Task.Run(() =>
+                {
+                    var projectDir = ProjectConfig.CreateProjectFolders(projectName);
+                    FileWatcher.Instance.CurrentPath = projectDir;
                 });
             }
         }
@@ -213,7 +234,7 @@ namespace ProjectManager.Pages
             });
         }
 
-        private void RenameSelectedFileItem()
+        private async void RenameSelectedFileItem()
         {
             if (this.FilePanel.SelectedItem == null)
                 return;
@@ -223,13 +244,16 @@ namespace ProjectManager.Pages
             if (dlg.DialogResult ?? false)
             {
                 var fileItem = (FileItem)this.FilePanel.SelectedItem;
-                var result = FileUtil.Rename(fileItem.FullPath, dlg.NewName.Text);
-                if (result != 0)
+                await Task.Run(() =>
                 {
-                    Util.ShowErrorMessage(Util.GetErrorMessage(result));
-                    return;
-                }
-                FileWatcher.Instance.Flush();
+                    var result = FileUtil.Rename(fileItem.FullPath, dlg.TextNewName.Text);
+                    if (result != 0)
+                    {
+                        Util.ShowErrorMessage(Util.GetErrorMessage(result));
+                        return;
+                    }
+                    FileWatcher.Instance.Flush();
+                });
             }
         }
 

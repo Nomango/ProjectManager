@@ -18,7 +18,14 @@
                 <Button IsEnabled="{Binding CanBack}" Content="&lt;" Click="ButtonBackward_Click" Margin="2" />
                 <Button IsEnabled="{Binding CanForward}" Content="&gt;" Click="ButtonForward_Click" Margin="2" />
                 <Button IsEnabled="{Binding CanUp}" Content="^" Click="ButtonUp_Click" Margin="2" />
-                <Button Content="⭕" Click="ButtonFlush_Click" Margin="2" />
+                <Button Content="..." Margin="2" Click="ButtonMore_Click">
+                    <Button.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Create Project" Click="CreateProjectMenu_Click" />
+                            <MenuItem Header="Refresh" Click="RefreshMenu_Click" />
+                        </ContextMenu>
+                    </Button.ContextMenu>
+                </Button>
                 <TextBox Text="{Binding CurrentPath}" Margin="2" />
             </DockPanel>
             <ProgressBar DockPanel.Dock="Top" x:Name="Progress" IsEnabled="False" IsIndeterminate="True"
@@ -51,7 +58,7 @@
                                     <ContextMenu></ContextMenu>
                                 </UserControl.ContextMenu>
                                 <StackPanel>
-                                    <Image Source="{Binding Icon}" Margin="22" Width="42" Height="42"></Image>
+                                    <Image Source="{Binding Icon}" Margin="18" Width="42" Height="42"></Image>
                                     <TextBlock x:Name="TextName" Text="{Binding Name}" TextWrapping="Wrap" MaxHeight="30" MaxWidth="100" Margin="10,0,10,0" HorizontalAlignment="Center" />
                                 </StackPanel>
                             </UserControl>

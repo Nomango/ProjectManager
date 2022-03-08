@@ -78,6 +78,7 @@ namespace ProjectManager.Utils
 
         public static bool TryConnect(string server)
         {
+            return true;
             var client = new TcpClient();
             try
             {

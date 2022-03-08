@@ -38,11 +38,11 @@
 
                 <StackPanel>
                     <Label Content="Server IP" Target="{Binding ElementName=TextHostIP}"/>
-                    <TextBox x:Name="TextHostIP" Width="156" Text="{Binding HostIP, Mode=TwoWay, ValidatesOnDataErrors=True}" />
+                    <TextBox x:Name="TextHostIP" Width="206" Text="{Binding HostIP, Mode=TwoWay, ValidatesOnDataErrors=True}" />
                 </StackPanel>
                 <StackPanel>
                     <Button x:Name="Submit" Content="Confirm" IsDefault="True" Width="80" Margin="100,16,0,0" Click="Button_Click"  HorizontalAlignment="Left" Background="White" BorderBrush="#FF2770FF"/>
-                    <Button x:Name="Reset" Content="Reset" IsEnabled="{Binding IsEnabled, ElementName=Submit}" Width="66" Margin="6,16,0,0" Click="Reset_Click"  HorizontalAlignment="Left"/>
+                    <Button x:Name="Reset" Content="Reset Network" IsEnabled="{Binding IsEnabled, ElementName=Submit}" Width="120" Margin="6,16,0,0" Click="Reset_Click"  HorizontalAlignment="Left"/>
                 </StackPanel>
                 <mui:BBCodeBlock x:Name="ErrorMessage" Margin="100,0,0,0" />
             </StackPanel>

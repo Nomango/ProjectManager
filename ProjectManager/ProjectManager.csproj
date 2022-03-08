@@ -69,11 +69,15 @@
     <Compile Include="Converters\CountToBoolConverter.cs" />
     <Compile Include="Events\MouseDoubleClick.cs" />
     <Compile Include="Events\MouseLeftButtonUpClick.cs" />
+    <Compile Include="FileManager\ProjectConfig.cs" />
     <Compile Include="Pages\FileList.xaml.cs">
       <DependentUpon>FileList.xaml</DependentUpon>
     </Compile>
     <Compile Include="HostWindow.xaml.cs">
       <DependentUpon>HostWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\NewProjectDialog.xaml.cs">
+      <DependentUpon>NewProjectDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\RenameFileDialog.xaml.cs">
       <DependentUpon>RenameFileDialog.xaml</DependentUpon>
@@ -112,6 +116,10 @@
     <Page Include="HostWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\NewProjectDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\RenameFileDialog.xaml">
       <SubType>Designer</SubType>

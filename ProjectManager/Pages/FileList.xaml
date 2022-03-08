@@ -27,7 +27,8 @@
             <ScrollViewer ContextMenuOpening="ContextMenu_ContextMenuOpening">
                 <ScrollViewer.ContextMenu>
                     <ContextMenu>
-                        <MenuItem x:Name="ParseMenuItem" Header="Parse" Click="Parse_Click"></MenuItem>
+                        <MenuItem Header="Refresh" Click="RefreshMenu_Click"></MenuItem>
+                        <MenuItem x:Name="ParseMenuItem" Header="Parse" Click="ParseMenu_Click"></MenuItem>
                     </ContextMenu>
                 </ScrollViewer.ContextMenu>
                 <ListBox x:Name="FilePanel"

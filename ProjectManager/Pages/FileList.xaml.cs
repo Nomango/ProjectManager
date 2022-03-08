@@ -63,7 +63,12 @@ namespace ProjectManager.Pages
             }
         }
 
-        private async void Parse_Click(object sender, RoutedEventArgs e)
+        private async void RefreshMenu_Click(object sender, RoutedEventArgs e)
+        {
+            await Do(() => FileWatcher.Instance.Flush());
+        }
+
+        private async void ParseMenu_Click(object sender, RoutedEventArgs e)
         {
             IDataObject dataObject = Clipboard.GetDataObject();
             if (!dataObject.GetDataPresent(DataFormats.FileDrop))
